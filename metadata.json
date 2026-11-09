@@ -1,0 +1,6 @@
+{
+  "name": "El Poder de los Números: Los Backrooms de las Matemáticas",
+  "description": "Escape room interactivo de matemáticas para 2.º de ESO (LOMLOE) ambientado en un instituto liminal. Domina potencias, raíces cuadradas, el teorema de Pitágoras y números irracionales a través de 9 cámaras gamificadas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

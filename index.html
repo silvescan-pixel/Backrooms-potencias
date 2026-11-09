@@ -1,0 +1,4021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Poder de los Números: Los Backrooms de las Matemáticas (2.º ESO)</title>
+  <meta name="description" content="Escape room interactivo de matemáticas para 2.º de ESO (LOMLOE) ambientado en los Backrooms escolares. Domina potencias, raíces cuadradas, el teorema de Pitágoras y números irracionales." />
+  <meta property="og:title" content="El Poder de los Números: Los Backrooms de las Matemáticas" />
+  <meta property="og:description" content="Escape room interactivo de matemáticas para 2.º de ESO ambientado en un instituto liminal. 9 cámaras narrativas, audio procedural de tensión y diploma descargable." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    /* ==========================================================================
+       ESTÉTICA BACKROOMS ESCOLARES (LIMINAL, CLAUSTROFÓBICA, VINTAGE)
+       ========================================================================== */
+    :root {
+      /* Tonos liminales de instituto abandonado: papel pintado ocre amarillento y hormigón */
+      --br-yellow-tint: #1c180e;
+      --br-wall-damp: #282415;
+      --br-card-bg: #201c12;
+      --br-card-surface: #2b2619;
+      --br-border-aged: #483f29;
+      --br-border-glow: #eab308;
+
+      --br-ochre-light: #fef08a;
+      --br-ochre-dim: #ca8a04;
+      --br-fluorescent-white: #fef9c3;
+      --br-concrete-gray: #3f3f46;
+
+      --terminal-green: #22c55e;
+      --terminal-green-glow: rgba(34, 197, 94, 0.3);
+      --alarm-red: #ef4444;
+      --chalk-white: #f8fafc;
+      --laser-cyan: #38bdf8;
+      --gold-seal: #fbbf24;
+
+      --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--br-yellow-tint);
+      color: #f5f5dc;
+      font-family: var(--font-display);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.55;
+    }
+
+    /* Textura de falso techo con paneles y escaneo de tubo fluorescente */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 15%, rgba(254, 240, 138, 0.05) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 4px),
+        linear-gradient(90deg, rgba(202, 138, 4, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(202, 138, 4, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 4px, 40px 40px, 40px 40px;
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    /* Parpadeo sutil de fluorescentes en el ambiente */
+    @keyframes fluorescentHumFlicker {
+      0%, 100% { opacity: 0.96; }
+      14% { opacity: 0.98; }
+      15% { opacity: 0.88; }
+      16% { opacity: 0.96; }
+      52% { opacity: 0.94; }
+      53% { opacity: 0.82; }
+      54% { opacity: 0.97; }
+      85% { opacity: 0.95; }
+    }
+
+    .flicker-ambient {
+      animation: fluorescentHumFlicker 6s infinite;
+    }
+
+    /* ==========================================================================
+       BARRA DE ESTADO SUPERIOR (INSTITUTO LIMINAL)
+       ========================================================================== */
+    header.backrooms-header {
+      background: rgba(32, 28, 18, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--br-border-aged);
+      padding: 0.75rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .brand-zone {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .fluorescent-beacon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fef08a;
+      box-shadow: 0 0 10px #fef08a, 0 0 20px rgba(254, 240, 138, 0.5);
+      animation: fluorescentHumFlicker 3s infinite;
+    }
+
+    .brand-title {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #fef08a;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .header-center-info {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.825rem;
+      color: #d4cfba;
+      font-family: var(--font-mono);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sys-btn {
+      background: var(--br-card-bg);
+      border: 1px solid var(--br-border-aged);
+      color: #f5f5dc;
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .sys-btn:hover {
+      background: var(--br-card-surface);
+      border-color: var(--br-ochre-dim);
+      color: #fff;
+    }
+
+    .sys-btn-accent {
+      background: rgba(234, 179, 8, 0.15);
+      border-color: #ca8a04;
+      color: #fef08a;
+    }
+
+    .sys-btn-accent:hover {
+      background: rgba(234, 179, 8, 0.3);
+      box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+    }
+
+    .sys-btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--alarm-red);
+      color: #f87171;
+    }
+
+    /* Barra de progreso de las 9 cámaras */
+    .progress-tracker {
+      background: rgba(20, 17, 10, 0.9);
+      border-bottom: 1px solid var(--br-border-aged);
+      padding: 0.5rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .progress-step {
+      flex: 1;
+      min-width: 32px;
+      height: 6px;
+      background: #332d1d;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-step.completed {
+      background: var(--terminal-green);
+      box-shadow: 0 0 6px var(--terminal-green-glow);
+    }
+
+    .progress-step.active {
+      background: #facc15;
+      box-shadow: 0 0 8px rgba(250, 204, 21, 0.7);
+    }
+
+    /* ==========================================================================
+       CONTENEDOR PRINCIPAL Y PANELES LIMINALES
+       ========================================================================== */
+    main.main-viewport {
+      flex: 1;
+      max-width: 1140px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .chamber-card {
+      background: var(--br-card-bg);
+      border: 1px solid var(--br-border-aged);
+      border-radius: 10px;
+      padding: 1.75rem;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(254, 240, 138, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chamber-header-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--br-border-aged);
+      padding-bottom: 1rem;
+    }
+
+    .chamber-title-group h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .chamber-title-group p {
+      color: #bbb398;
+      font-size: 0.88rem;
+      margin-top: 0.25rem;
+    }
+
+    .chamber-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      background: #17140b;
+      border: 1px solid var(--br-border-aged);
+      color: #facc15;
+    }
+
+    /* ==========================================================================
+       PANTALLA DE INTRODUCCIÓN DE SILVEXTRUX (SOLILOQUIO PREVIO)
+       ========================================================================== */
+    .intro-silvextrux-screen {
+      background: radial-gradient(circle at 50% 20%, #2f2713 0%, #16130a 80%);
+      border: 2px solid #5a4b27;
+      border-radius: 12px;
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-silvextrux-screen::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ca8a04, #fef08a, #ca8a04);
+      box-shadow: 0 0 12px #fef08a;
+    }
+
+    .intro-header-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: #eab308;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .intro-character-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .intro-character-layout {
+        grid-template-columns: 240px 1fr;
+      }
+    }
+
+    .portrait-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #ca8a04;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 15px rgba(234, 179, 8, 0.2);
+      background: #1a160d;
+      position: relative;
+    }
+
+    .portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .portrait-fallback {
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: #2a2212;
+      color: #fef08a;
+      font-size: 2.5rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .intro-soliloquy-speech {
+      background: rgba(22, 19, 11, 0.85);
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .intro-soliloquy-speech h3 {
+      font-size: 1.25rem;
+      color: #fef08a;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .intro-soliloquy-speech p {
+      font-size: 0.98rem;
+      color: #fef9c3;
+      line-height: 1.65;
+    }
+
+    .intro-soliloquy-speech .quote-highlight {
+      color: #facc15;
+      font-style: italic;
+      border-left: 3px solid #ca8a04;
+      padding-left: 0.85rem;
+      margin: 0.4rem 0;
+    }
+
+    /* Pista de Álex dentro de la prueba */
+    .alex-hint-box {
+      background: rgba(30, 26, 17, 0.9);
+      border: 1px solid #715b2c;
+      border-left: 4px solid #eab308;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .alex-mini-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ca8a04;
+      flex-shrink: 0;
+      background: #1b170e;
+    }
+
+    .alex-hint-content h4 {
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      color: #facc15;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .alex-hint-content p {
+      font-size: 0.88rem;
+      color: #fef08a;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       AREAS INTERACTIVAS (AJEDREZ, LABORATORIO DE DESCUBRIMIENTO, PITÁGORAS)
+       ========================================================================== */
+    .interactive-stage {
+      background: #17130a;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Cámara 1: Tablero de Ajedrez 8x8 */
+    .chess-grid-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chessboard-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1 / 1;
+      border: 2px solid #524426;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .chess-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+
+    .chess-cell.light { background: #2f2817; color: #d4cfba; }
+    .chess-cell.dark { background: #1c180e; color: #8a7f65; }
+    .chess-cell:hover { background: #483d25; color: #fff; }
+    .chess-cell.active-square {
+      background: rgba(234, 179, 8, 0.4) !important;
+      color: #fef08a !important;
+      outline: 2px solid #facc15;
+      z-index: 2;
+    }
+    .chess-cell.target-square {
+      background: rgba(239, 68, 68, 0.35) !important;
+      color: #fca5a5 !important;
+      outline: 2px dashed var(--alarm-red);
+    }
+
+    .wheat-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .wheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      text-align: left;
+    }
+
+    .wheat-table th, .wheat-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--br-border-aged);
+    }
+
+    .wheat-table th {
+      background: var(--br-card-surface);
+      color: #facc15;
+      font-weight: 600;
+    }
+
+    /* Cámara 2: Papel */
+    .slider-control-box {
+      background: var(--br-card-surface);
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .slider-range-input {
+      width: 100%;
+      accent-color: #eab308;
+      cursor: pointer;
+      height: 8px;
+    }
+
+    /* Cámara 3: Sala Cuadrada (Contenedor estrictamente contenido) */
+    .geometry-canvas-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #120f08;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+
+    .geometry-svg-responsive {
+      width: 100%;
+      height: auto;
+      max-height: 220px;
+      display: block;
+    }
+
+    /* Cámara 4: Puente Láser Arrastrable */
+    .laser-svg-canvas {
+      width: 100%;
+      max-height: 320px;
+      background: #0f0c07;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      user-select: none;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .drag-handle-circle {
+      cursor: grab;
+      fill: #facc15;
+      stroke: #fff;
+      stroke-width: 2.5px;
+      transition: r 0.15s ease, filter 0.15s ease;
+      filter: drop-shadow(0 0 6px #facc15);
+    }
+
+    .drag-handle-circle:hover, .drag-handle-circle:active {
+      cursor: grabbing;
+      r: 12;
+      filter: drop-shadow(0 0 10px #fef08a);
+    }
+
+    /* Laboratorios de descubrimiento de potencias (Cámaras 5, 6, 7) */
+    .discovery-lab-shell {
+      background: #151109;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .factor-cards-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem;
+      background: #201a0d;
+      border-radius: 6px;
+      border: 1px dashed var(--br-border-aged);
+    }
+
+    .factor-pill {
+      background: #362c16;
+      border: 1px solid #786027;
+      color: #fef08a;
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+    }
+
+    .factor-pill.canceled {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--alarm-red);
+      color: #fca5a5;
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    /* Apartados múltiples en Cámaras 5, 6 y 7 */
+    .apartados-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .apartado-card {
+      background: #19140b;
+      border: 1px solid var(--br-border-aged);
+      border-left: 4px solid #ca8a04;
+      border-radius: 8px;
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: border-color 0.15s ease;
+    }
+
+    .apartado-card:hover {
+      border-color: #facc15;
+    }
+
+    .apartado-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .apartado-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #facc15;
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid #786027;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .apartado-title-expr {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fef08a;
+    }
+
+    .apartado-inputs-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #130f07;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #3c3218;
+    }
+
+    .guided-example-box {
+      background: rgba(30, 24, 13, 0.9);
+      border: 1px solid #ca8a04;
+      border-left: 4px solid #facc15;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    /* Terminales numéricos e inputs */
+    .crypto-terminal-shell {
+      background: #18130a;
+      border: 1px solid #45381d;
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .crypto-expression-display {
+      background: #251e10;
+      border: 1px solid #5a4925;
+      border-radius: 6px;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fef08a;
+      letter-spacing: 0.05em;
+    }
+
+    .crypto-input {
+      background: #141008;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 6px;
+      padding: 0.65rem 0.9rem;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      min-width: 140px;
+    }
+
+    .crypto-input:focus {
+      outline: none;
+      border-color: #facc15;
+      box-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+
+    /* Feedback visual */
+    .feedback-box {
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.9rem;
+      display: none;
+      align-items: flex-start;
+      gap: 0.75rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .feedback-box.visible { display: flex; }
+
+    .feedback-success {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid var(--terminal-green);
+      color: #bbf7d0;
+    }
+
+    .feedback-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--alarm-red);
+      color: #fca5a5;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-unlock-gate {
+      background: #eab308;
+      color: #1c180e;
+      border: none;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      font-family: var(--font-display);
+    }
+
+    .btn-unlock-gate:hover {
+      background: #facc15;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* Modales */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 11, 6, 0.88);
+      backdrop-filter: blur(5px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-window {
+      background: #241e12;
+      border: 1px solid #5a4b27;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--br-border-aged);
+      padding-bottom: 0.75rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.2rem;
+      color: #fef08a;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Diploma de Supervivencia */
+    .diploma-wrapper {
+      background: #17130a;
+      border: 3px double #d4af37;
+      border-radius: 12px;
+      padding: 2.25rem;
+      color: #fef9c3;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.85);
+    }
+
+    .diploma-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      pointer-events: none;
+    }
+
+    .metacognition-grid {
+      background: rgba(36, 30, 18, 0.75);
+      border: 1px solid var(--br-border-aged);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .metacog-item label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #facc15;
+      margin-bottom: 0.4rem;
+    }
+
+    .metacog-item textarea {
+      width: 100%;
+      background: #141008;
+      border: 1px solid var(--br-border-aged);
+      border-radius: 6px;
+      padding: 0.65rem;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 55px;
+    }
+
+    .metacog-item textarea:focus {
+      outline: none;
+      border-color: #facc15;
+    }
+  </style>
+</head>
+<body class="flicker-ambient">
+
+  <!-- ==========================================================================
+       BARRA DE ESTADO SUPERIOR
+       ========================================================================== -->
+  <header class="backrooms-header">
+    <div class="brand-zone">
+      <div class="fluorescent-beacon" id="beacon-light"></div>
+      <div class="brand-title">LOS BACKROOMS DE LAS MATEMÁTICAS</div>
+    </div>
+
+    <div class="header-center-info" id="team-header-display">
+      <span id="display-team-name">Equipo: Sin Registrar</span>
+      <span aria-hidden="true">·</span>
+      <span id="display-score-top">Puntos: 0.0 / 10</span>
+      <span aria-hidden="true">·</span>
+      <span id="display-room-title">Fase 0/9</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="sys-btn" id="btn-nav-download-html" title="Descargar la aventura completa en un único archivo HTML offline">
+        💾 Descargar HTML
+      </button>
+      <button class="sys-btn" id="btn-toggle-sound" title="Activar/Silenciar la música de tensión y ambiente de los Backrooms">
+        <span id="sound-icon">🔇</span> <span id="sound-label">Música: OFF</span>
+      </button>
+      <button class="sys-btn sys-btn-accent" id="btn-open-teacher" title="Panel exclusivo para el docente">
+        🔐 Panel Docente
+      </button>
+    </div>
+  </header>
+
+  <!-- Barra de progreso con 9 cámaras -->
+  <div class="progress-tracker" id="progress-bar-container" title="Progreso por las 9 cámaras del instituto">
+    <div class="progress-step" id="pstep-1" title="Cámara 1: Trigo y Ajedrez"></div>
+    <div class="progress-step" id="pstep-2" title="Cámara 2: Papel de Calibración"></div>
+    <div class="progress-step" id="pstep-3" title="Cámara 3: Sala Cuadrada"></div>
+    <div class="progress-step" id="pstep-4" title="Cámara 4: Puente Láser de Pitágoras"></div>
+    <div class="progress-step" id="pstep-5" title="Cámara 5: Descubrimiento del Producto"></div>
+    <div class="progress-step" id="pstep-6" title="Cámara 6: Descubrimiento del Cociente"></div>
+    <div class="progress-step" id="pstep-7" title="Cámara 7: Descubrimiento de Potencia de Potencia"></div>
+    <div class="progress-step" id="pstep-8" title="Cámara 8: Auditoría Silvextrux"></div>
+    <div class="progress-step" id="pstep-9" title="Cámara 9: Código Maestro"></div>
+  </div>
+
+  <!-- ==========================================================================
+       CONTENEDOR DE PANTALLAS
+       ========================================================================== -->
+  <main class="main-viewport" id="viewport-container">
+
+    <!-- PANTALLA 0: EL VESTÍBULO INFINITO (REGISTRO) -->
+    <div class="chamber-card" id="screen-lobby">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>🚪 Nivel 0: El Vestíbulo Infinito</h2>
+          <p>Instituto Liminal · Departamento de Ciencias Clausurado · 2.º de ESO (LOMLOE)</p>
+        </div>
+        <span class="chamber-badge">PROTOCOLO DE ACCESO EN PAREJA</span>
+      </div>
+
+      <!-- CONTEXTO NARRATIVO: TRANSMISIÓN DE MEGAFONÍA CENTRAL DE SILVEXTRUX -->
+      <div style="background: rgba(20, 16, 9, 0.94); border: 2px solid #ca8a04; border-radius: 8px; padding: 1.35rem; display: flex; flex-direction: column; gap: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.65);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--br-border-aged); padding-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px #ef4444;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #facc15; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+              🚨 TRANSMISIÓN DE EMERGENCIA // SISTEMA DE MEGAFONÍA DEL INSTITUTO
+            </span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: #a1a1aa; background: #27272a; padding: 0.2rem 0.55rem; border-radius: 4px;">
+            IES "HIPATIA DE ALEJANDRÍA" · VIERNES 14:35 H
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
+          <div style="width: 95px; height: 95px; border-radius: 8px; overflow: hidden; border: 2px solid #ca8a04; flex-shrink: 0; box-shadow: 0 0 12px rgba(202,138,4,0.3);">
+            <img src="/src/assets/images/silvextrux_avatar_1794136128349.jpg" alt="Profesor Silvextrux" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="portrait-fallback" style="font-size: 1.7rem;">Σ</div>
+          </div>
+          
+          <div style="flex: 1; min-width: 250px;">
+            <div style="font-size: 0.86rem; color: #e4e4e7; line-height: 1.6; margin-bottom: 0.75rem;">
+              <strong style="color: #facc15;">¿Cómo habéis llegado aquí?</strong> Acaba de sonar el último timbre del viernes y todo el alumnado se ha marchado a casa. Vosotros dos os quedasteis rezagados en el Laboratorio de Ciencias guardando las balanzas y repasando dudas. Al abrir el viejo armario de doble fondo del almacén didáctico, una violenta descarga estática desgarró el espacio tridimensional y fuisteis absorbidos hacia un plano desconocido.
+            </div>
+
+            <div style="background: rgba(10, 8, 4, 0.8); border-left: 3px solid #facc15; padding: 0.85rem 1rem; border-radius: 0 6px 6px 0; margin-bottom: 0.75rem;">
+              <h4 style="color: #fef08a; font-size: 0.92rem; font-family: var(--font-mono); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
+                📢 Voz chillona de Silvextrux retumbando por los altavoces del techo:
+              </h4>
+              <p style="font-size: 0.88rem; color: #fef9c3; line-height: 1.6; font-style: italic;">
+                «¡Atención, alumnos rezagados! Os habla vuestro profesor de matemáticas, <strong>Silvextrux</strong>. Mirad a vuestro alrededor: las paredes monótonas de papel húmedo amarillento, las hileras de fluorescentes parpadeantes y los pasillos que se bifurcan sin fin. Habéis caído en el <strong>Nivel 0 de los Backrooms Escolares</strong>, la dimensión liminal que he despertado con mi Condensador Aritmético en el sótano.
+              </p>
+              <p style="font-size: 0.88rem; color: #fef9c3; line-height: 1.6; margin-top: 0.5rem; font-style: italic;">
+                <strong>¿Por qué os he encerrado?</strong> Llevo meses viéndoos memorizar potencias y radicales como si fueran fórmulas vacías para aprobar un examen. ¡Inadmisible! Las potencias no son números en una libreta: <em>¡son las leyes que doblan el espacio, multiplican la materia y rigen las dimensiones!</em> He sellado herméticamente las 9 compuertas del instituto con cerrojos cuánticos. No tenéis cobertura y las puertas de emergencia dan al vacío. La única salida es razonar en pareja, colaborar y demostrarme que domináis de verdad el poder de los números. Si fracasáis... vuestro fin de semana se repetirá en este purgatorio de baldosas gastadas para siempre.»
+              </p>
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #fbbf24; display: flex; align-items: center; gap: 0.4rem;">
+              <span>⚡ ESTADO DEL CENTRO:</span> 9 COMPUERTAS SELLADAS · RESOLUCIÓN COOPERATIVA OBLIGATORIA
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TRANSMISIÓN DE ÁLEX POR EL WALKIE-TALKIE -->
+      <div class="alex-hint-box" style="margin-top: 0.65rem;">
+        <div class="alex-mini-avatar" style="width: 76px; height: 76px;">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1.3rem;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.35rem;">
+            <h4 style="color: #4ade80; font-size: 0.95rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.4rem;">
+              📻 Walkie-Talkie: Mensaje Clandestino de Álex
+            </h4>
+            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: #86efac; background: rgba(34,197,94,0.15); padding: 0.15rem 0.5rem; border-radius: 4px;">
+              Canal 4 · Alumno atrapado
+            </span>
+          </div>
+          <p style="font-size: 0.89rem; color: #fef9c3; line-height: 1.6;">
+            «¡Chssst! ¿Me recibís bien? <strong>Soy Álex, alumno de 2.º de ESO igual que vosotros</strong>. El martes pasado me quedé castigado repasando y me tragué este laberinto cuando Silvextrux activó su máquina en el sótano. Llevo días sobreviviendo por los falsos techos y conductos de ventilación. <strong>No os dejéis intimidar por sus discursos</strong>: Silvextrux está obsesionado con sus teoremas, pero sus cerrojos son totalmente matemáticos y justos. Os iré dejando notas adhesivas y pistas clave en cada cámara para que no os bloqueéis. ¡Rellenad vuestros nombres y escapemos juntos de esta pesadilla!»
+          </p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <h3 style="font-size: 0.95rem; color: #facc15; font-family: var(--font-mono);">
+          📋 REGISTRO OFICIAL DE LA PAREJA INVESTIGADORA
+        </h3>
+        <p style="font-size: 0.85rem; color: #d4cfba;">
+          Ambos integrantes deben razonar juntos cada paso. Al iniciar la misión, comenzará la música de tensión y el zumbido ambiental de los Backrooms.
+        </p>
+
+        <form id="team-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-family: var(--font-mono); color: #facc15; margin-bottom: 0.3rem;">
+              Nombre del Integrante 1 *
+            </label>
+            <input type="text" id="input-student1" class="crypto-input" style="width: 100%;" placeholder="Ej: Lucía García" required />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-family: var(--font-mono); color: #facc15; margin-bottom: 0.3rem;">
+              Nombre del Integrante 2 *
+            </label>
+            <input type="text" id="input-student2" class="crypto-input" style="width: 100%;" placeholder="Ej: Mario Ramos" required />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-family: var(--font-mono); color: #facc15; margin-bottom: 0.3rem;">
+              Grupo / Curso *
+            </label>
+            <input type="text" id="input-group" class="crypto-input" style="width: 100%;" placeholder="Ej: 2.º ESO B" required />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-family: var(--font-mono); color: #facc15; margin-bottom: 0.3rem;">
+              Nombre del Equipo *
+            </label>
+            <input type="text" id="input-team" class="crypto-input" style="width: 100%;" placeholder="Ej: Escuadrón Hipatia" required />
+          </div>
+        </form>
+        <div id="lobby-error-msg" class="feedback-box feedback-error" style="display:none; margin-top: 0.75rem;"></div>
+      </div>
+
+      <div class="action-row" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <button type="button" class="sys-btn" id="btn-lobby-download-html" style="font-size: 0.85rem; padding: 0.6rem 1rem;" title="Descargar el juego completo para usarlo sin conexión o subirlo a Moodle/Classroom">
+          💾 Descargar Versión HTML Offline
+        </button>
+        <button class="btn-unlock-gate" id="btn-start-adventure">
+          🚪 COMENZAR LA MISIÓN Y ENTRAR A LOS BACKROOMS
+        </button>
+      </div>
+    </div>
+
+    <!-- PANTALLA INTRODUCION DINÁMICA DE SILVEXTRUX (SE USA ANTES DE CADA CÁMARA 1..9) -->
+    <div class="intro-silvextrux-screen" id="screen-silvextrux-intro" style="display: none;">
+      <div class="intro-header-kicker">
+        <span>⚡ INTERCEPCIÓN DE SEÑAL // INTERFONO DEL INSTITUTO</span>
+        <span aria-hidden="true">·</span>
+        <span id="intro-chamber-tag">CÁMARA 1</span>
+      </div>
+
+      <div class="intro-character-layout">
+        <div class="portrait-box">
+          <img src="/src/assets/images/silvextrux_avatar_1794136128349.jpg" alt="Profesor Silvextrux" class="portrait-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback">Σ</div>
+        </div>
+
+        <div class="intro-soliloquy-speech">
+          <h3 id="intro-soliloquy-title">Profesor Silvextrux</h3>
+          <p id="intro-soliloquy-body">«...»</p>
+          <div class="quote-highlight" id="intro-soliloquy-quote">«...»</div>
+        </div>
+      </div>
+
+      <div class="action-row" style="justify-content: flex-end;">
+        <button class="btn-unlock-gate" id="btn-advance-from-intro">
+          AVANZAR A LA SALA Y ENFRENTAR LA ANOMALÍA ➡️
+        </button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 1: EL ARCHIVO DE LOS GRANOS DE TRIGO -->
+    <div class="chamber-card" id="screen-chamber-1" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 1: El Archivo de los Granos de Trigo</h2>
+          <p>Sector Binario · El Crecimiento Exponencial (2<sup>n</sup>)</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="sys-btn" id="btn-open-sissa-story">📖 Leyenda de Sissa</button>
+          <span class="chamber-badge">FASE 1 / 9</span>
+        </div>
+      </div>
+
+      <!-- Pista de Álex -->
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Nota de Álex en el conducto</h4>
+          <p>«¡Cuidado con la escala! Cada casilla duplica exactamente a la anterior. Pulsad las casillas del tablero para ver la masa en la tabla. Para pasar de gramos a kilogramos, acordaos de que mil gramos hacen un kilo. ¡Calculadlo juntos en un papel!»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15;">
+            Tablero Interactivo de 64 Casillas (Selecciona para inspeccionar potencia)
+          </div>
+          <div id="chess-inspector-tag" style="font-family: var(--font-mono); font-size: 0.85rem; color: #fff;">
+            Casilla seleccionada: 1 · Granos: 1 (2<sup>0</sup>)
+          </div>
+        </div>
+
+        <div class="chess-grid-container">
+          <div class="chessboard-grid" id="chessboard-element"></div>
+        </div>
+
+        <div class="wheat-table-wrap">
+          <table class="wheat-table">
+            <thead>
+              <tr>
+                <th>Casilla (n)</th>
+                <th>Potencia</th>
+                <th>Granos en la casilla (2<sup>n-1</sup>)</th>
+                <th>Total acumulado (2<sup>n</sup> - 1)</th>
+                <th>Equivalencia física aproximada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>2<sup>0</sup></td><td>1</td><td>1</td><td>0.05 gramos (1 pizca)</td></tr>
+              <tr><td>2</td><td>2<sup>1</sup></td><td>2</td><td>3</td><td>0.10 gramos</td></tr>
+              <tr><td>3</td><td>2<sup>2</sup></td><td>4</td><td>7</td><td>0.20 gramos</td></tr>
+              <tr><td>4</td><td>2<sup>3</sup></td><td>8</td><td>15</td><td>0.40 gramos</td></tr>
+              <tr><td>5</td><td>2<sup>4</sup></td><td>16</td><td>31</td><td>0.80 gramos</td></tr>
+              <tr><td>10</td><td>2<sup>9</sup></td><td>512</td><td>1.023</td><td>~25 gramos (un puñado)</td></tr>
+              <tr><td>20</td><td>2<sup>19</sup></td><td>524.288</td><td>1.048.575</td><td>~26 kg (un saco grande)</td></tr>
+              <tr><td>64</td><td>2<sup>63</sup></td><td>9.223.372.036.854.775.808</td><td>18.446.744.073.709.551.615</td><td>¡Más de 1 billón de toneladas!</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="crypto-terminal-shell">
+          <div style="color: #facc15; font-weight: 700;">
+            ⚙️ CÁLCULO DE MASA REAL PARA DESACTIVAR LA COMPUERTA
+          </div>
+          <p id="chamber-1-challenge-text" style="font-size: 0.9rem; color: #fef08a;"></p>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <input type="number" id="input-c1-weight" class="crypto-input" placeholder="Masa entera en kg..." />
+            <span style="font-family: var(--font-mono); color: #d4cfba;">kg de trigo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c1"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c1-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c1">DESBLOQUEAR COMPUERTA 1 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 2: EL TALLER DE PAPEL DE CALIBRACIÓN -->
+    <div class="chamber-card" id="screen-chamber-2" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 2: El Taller de Papel de Calibración</h2>
+          <p>Compresión de Espesor · Modelo Exponencial (e<sub>n</sub> = 0,1 mm · 2<sup>n</sup>)</p>
+        </div>
+        <span class="chamber-badge">FASE 2 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Nota de Álex</h4>
+          <p>«El calibrador solo permite probar hasta n = 8 dobleces para que descubráis la fórmula. Cada doblez multiplica el espesor anterior por 2: <em>e<sub>n</sub> = 0,1 mm · 2<sup>n</sup></em>. Fijaos en el cálculo que aparece en pantalla al mover la barra y continuad multiplicando en vuestro cuaderno hasta superar la altura fijada.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="slider-control-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono);">
+            <span>Control de Dobleces de Papel (Calibrador de Muestra):</span>
+            <span id="slider-folds-label" style="color: #facc15; font-size: 1.1rem; font-weight: 700;">n = 0 dobleces</span>
+          </div>
+          <input type="range" id="paper-folds-slider" class="slider-range-input" min="0" max="8" value="0" />
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #999; font-family: var(--font-mono);">
+            <span>n = 0 (0,1 mm)</span>
+            <span>n = 2 (0,4 mm)</span>
+            <span>n = 4 (1,6 mm)</span>
+            <span>n = 6 (6,4 mm)</span>
+            <span>n = 8 (25,6 mm)</span>
+          </div>
+        </div>
+
+        <div style="background: #17130a; border: 1px solid var(--br-border-aged); border-radius: 6px; padding: 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">📄</span>
+          <div>
+            <div style="font-weight: 700; color: #facc15;" id="paper-thickness-title">Cálculo: e₀ = 0,1 mm · 2⁰ = 0,1 mm · 1 = 0,10 mm</div>
+            <div style="font-size: 0.85rem; color: #d4cfba;" id="paper-thickness-desc">Una hoja estándar de cuaderno escolar (1 capa).</div>
+          </div>
+        </div>
+
+        <div class="crypto-terminal-shell">
+          <div style="color: #facc15; font-weight: 700;">
+            ⚙️ SENSOR DE PRESIÓN: DOBLECES MÍNIMOS REQUERIDOS
+          </div>
+          <p id="chamber-2-challenge-text" style="font-size: 0.9rem; color: #fef08a;"></p>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <input type="number" id="input-c2-folds" class="crypto-input" placeholder="Número de dobleces (n)..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c2"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c2-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c2">DESBLOQUEAR COMPUERTA 2 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 3: LA SALA CUADRADA -->
+    <div class="chamber-card" id="screen-chamber-3" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 3: La Sala Cuadrada</h2>
+          <p>Aula de Geometría Prohibida · Transformación a Cuadrado y Raíz Cuadrada</p>
+        </div>
+        <span class="chamber-badge">FASE 3 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Andamiaje de Álex</h4>
+          <p>«¡Fijaos bien en el ejemplo resuelto paso a paso que os he dibujado antes de responder! Primero calculad el área rectangular multiplicando ancho por largo. Para formar el aula cuadrada, esa misma área equivale a lado × lado = l². La raíz cuadrada de esa área os dará el lado exacto.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <!-- Contenedor del polígono perfectamente encajado -->
+        <div class="geometry-canvas-container">
+          <svg id="svg-geometry-room" class="geometry-svg-responsive" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+            <!-- Dibujado dinámico -->
+          </svg>
+        </div>
+
+        <!-- EJEMPLO RESUELTO POR ÁLEX -->
+        <div class="guided-example-box">
+          <div style="display: flex; align-items: center; gap: 0.5rem; color: #facc15; font-weight: 700; font-size: 0.9rem; font-family: var(--font-mono); margin-bottom: 0.4rem;">
+            <span>💡 EJEMPLO RESUELTO POR ÁLEX (CÓMO RESOLVERLO PASO A PASO)</span>
+          </div>
+          <div style="font-size: 0.85rem; color: #fef08a; line-height: 1.6;">
+            <p>«Imaginad que una sala deformada midiera <strong>24 m de largo por 6 m de ancho</strong>:</p>
+            <ul style="margin-left: 1.25rem; margin-top: 0.25rem;">
+              <li><strong>Paso 1 (Calcular el Área):</strong> Área rectángulo = largo × ancho = 24 × 6 = <strong>144 m²</strong>.</li>
+              <li><strong>Paso 2 (Conservar el área en un cuadrado):</strong> El área de una sala cuadrada es lado × lado = l². Por tanto, l² = 144 m².</li>
+              <li><strong>Paso 3 (Extraer la raíz cuadrada):</strong> Para despejar el lado exacto: l = √144 = <strong>12 metros</strong> (porque 12 × 12 = 144).»</li>
+            </ul>
+            <p style="margin-top: 0.4rem; color: #4ade80;">
+              ¡Ahora reproducid exactamente este mismo procedimiento con las medidas de vuestra sala aquí abajo!
+            </p>
+          </div>
+        </div>
+
+        <div class="crypto-terminal-shell">
+          <div style="color: #facc15; font-weight: 700;">
+            📐 DIMENSIONES REGISTRADAS DE LA SALA RECTANGULAR DEFORMADA
+          </div>
+          <p id="chamber-3-specs" style="font-size: 0.95rem; color: #fff;"></p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: #bbb; font-family: var(--font-mono); margin-bottom: 0.25rem;">
+                Paso 1: Área Total (m<sup>2</sup>)
+              </label>
+              <input type="number" id="input-c3-area" class="crypto-input" style="width: 100%;" placeholder="Área en m²..." />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: #facc15; font-family: var(--font-mono); margin-bottom: 0.25rem;">
+                Paso 2: Lado del Cuadrado (l = √Área)
+              </label>
+              <input type="number" id="input-c3-side" class="crypto-input" style="width: 100%;" placeholder="Lado exacto en m..." />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c3"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c3-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c3">DESBLOQUEAR COMPUERTA 3 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 4: EL PUENTE LÁSER DE PITÁGORAS (ARRASTRE INTERACTIVO) -->
+    <div class="chamber-card" id="screen-chamber-4" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 4: El Puente Láser de la Diagonal</h2>
+          <p>Irracionales en la Recta Real · Construcción Geométrica con Pitágoras</p>
+        </div>
+        <span class="chamber-badge">FASE 4 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Pista de Álex</h4>
+          <p>«¡No toquéis botones! Arrastrad directamente con el dedo o ratón el <strong>nodo amarillo brillante</strong> del triángulo. Al cambiar la base y la altura, la diagonal láser medirá exactamente √(a<sup>2</sup> + b<sup>2</sup>). Cuando consigáis el número irracional pedido, pulsad "Proyectar Láser" para bajar el compás.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <!-- SVG interactivo arrastrable -->
+        <svg id="svg-laser-bridge" class="laser-svg-canvas" viewBox="0 0 650 280">
+          <!-- Dibujado dinámicamente con JS y evento de arrastre -->
+        </svg>
+
+        <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15;" id="laser-drag-status-indicator">
+            Arrastra el vértice (a, b) sobre la cuadrícula
+          </div>
+          <button class="sys-btn sys-btn-accent" id="btn-c4-project-arc">
+            🎯 Proyectar Láser a la Recta Numérica
+          </button>
+        </div>
+
+        <div class="crypto-terminal-shell">
+          <div style="color: #facc15; font-weight: 700;">
+            ⚡ FRECUENCIA IRRACIONAL EXIGIDA POR SILVEXTRUX
+          </div>
+          <p id="chamber-4-challenge-text" style="font-size: 0.95rem; color: #fff;"></p>
+          <div id="chamber-4-current-calc" style="font-size: 0.95rem; font-family: var(--font-mono); color: #fef08a;">
+            Configuración actual: √(1<sup>2</sup> + 1<sup>2</sup>) = √2 ≈ 1.414
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c4"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c4-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c4">DESBLOQUEAR COMPUERTA 4 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 5: LABORATORIO DE DESCUBRIMIENTO DEL PRODUCTO (3 APARTADOS) -->
+    <div class="chamber-card" id="screen-chamber-5" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 5: Laboratorio del Multiplicador</h2>
+          <p>Descubrimiento Guiado · Propiedades del Producto de Potencias (3 Desafíos)</p>
+        </div>
+        <span class="chamber-badge">FASE 5 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Guía de Indagación de Álex</h4>
+          <p>«¡Silvextrux ha dividido el multiplicador en 3 circuitos! Pulsad en <em>"Desglosar Factores"</em> para verlos como multiplicaciones elementales. Recordad dos reglas de oro: un factor sin exponente visible tiene exponente 1 (ej: 5 = 5¹); y si tienen distinta base pero mismo exponente, multiplicamos las bases manteniendo el exponente.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="apartados-container">
+          
+          <!-- APARTADO A -->
+          <div class="apartado-card" id="c5-card-a">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado A · Misma Base (2 Factores)</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c5-expand-a" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                🔍 Desglosar Factores
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c5-expr-title-a"></div>
+            <div class="factor-cards-flex" id="c5-expansion-a" style="display: none;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia única:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c5-base-a" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c5-exp-a" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO B -->
+          <div class="apartado-card" id="c5-card-b">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado B · 3 Factores con Exponente 1 Tácito</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c5-expand-b" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                🔍 Desglosar Factores
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c5-expr-title-b"></div>
+            <div class="factor-cards-flex" id="c5-expansion-b" style="display: none;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia única:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c5-base-b" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c5-exp-b" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO C -->
+          <div class="apartado-card" id="c5-card-c">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado C · Distinta Base pero Mismo Exponente</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c5-expand-c" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                🔍 Desglosar Factores
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c5-expr-title-c"></div>
+            <div class="factor-cards-flex" id="c5-expansion-c" style="display: none;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia única:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c5-base-c" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c5-exp-c" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c5"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c5-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c5">DESBLOQUEAR COMPUERTA 5 (3 APARTADOS) 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 6: LABORATORIO DE DESCUBRIMIENTO DEL COCIENTE (3 APARTADOS) -->
+    <div class="chamber-card" id="screen-chamber-6" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 6: Laboratorio del Divisor</h2>
+          <p>Descubrimiento Guiado · Propiedades del Cociente de Potencias (3 Desafíos)</p>
+        </div>
+        <span class="chamber-badge">FASE 6 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Guía de Indagación de Álex</h4>
+          <p>«¡Atención al signo en el apartado B! Cuando una base negativa está entre paréntesis, por ejemplo (-3), la base sigue siendo negativa: (-3). Y en el apartado C, si las bases son distintas pero el exponente es idéntico, dividid las bases entre sí manteniendo el exponente intacto.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="apartados-container">
+          
+          <!-- APARTADO A -->
+          <div class="apartado-card" id="c6-card-a">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado A · Misma Base (Cociente Simple)</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c6-cancel-a" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                ✂️ Cancelar Factores
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c6-expr-title-a"></div>
+            <div id="c6-cancellation-a" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; text-align: center;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Cociente simplificado:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c6-base-a" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c6-exp-a" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO B -->
+          <div class="apartado-card" id="c6-card-b">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado B · Base Entera Negativa Entre Paréntesis</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c6-cancel-b" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                ✂️ Cancelar Factores
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c6-expr-title-b"></div>
+            <div id="c6-cancellation-b" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; text-align: center;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Cociente simplificado:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base (con signo):</label>
+                <input type="number" id="input-c6-base-b" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Ej: -3" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c6-exp-b" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO C -->
+          <div class="apartado-card" id="c6-card-c">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado C · Distinta Base pero Mismo Exponente</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c6-cancel-c" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                ✂️ Simplificar Bases
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c6-expr-title-c"></div>
+            <div id="c6-cancellation-c" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; text-align: center;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Cociente simplificado:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base resultante:</label>
+                <input type="number" id="input-c6-base-c" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c6-exp-c" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c6"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c6-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c6">DESBLOQUEAR COMPUERTA 6 (3 APARTADOS) 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 7: LABORATORIO DE POTENCIA DE UNA POTENCIA (3 APARTADOS) -->
+    <div class="chamber-card" id="screen-chamber-7" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 7: La Cámara de Transformación</h2>
+          <p>Descubrimiento Guiado · Potencia de Potencia y Agrupaciones (3 Desafíos)</p>
+        </div>
+        <span class="chamber-badge">FASE 7 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Guía de Indagación de Álex</h4>
+          <p>«En una potencia de potencia los exponentes se multiplican. Si hay 3 exponentes en cascada [(bᵖ)ᑫ]ʳ, se multiplican los tres: p · q · r. Y si tenéis un producto dentro de un paréntesis (aᵐ · aⁿ)ᵖ, primero sumad los exponentes interiores y luego multiplicad por el exterior.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="apartados-container">
+          
+          <!-- APARTADO A -->
+          <div class="apartado-card" id="c7-card-a">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado A · Potencia de una Potencia Simple</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c7-expand-a" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                📦 Desplegar Paquetes
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c7-expr-title-a"></div>
+            <div id="c7-packets-a" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia resultante:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c7-base-a" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c7-exp-a" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO B -->
+          <div class="apartado-card" id="c7-card-b">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado B · Triple Exponente Anidado en Cascada</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c7-expand-b" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                📦 Desplegar Paquetes
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c7-expr-title-b"></div>
+            <div id="c7-packets-b" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia resultante:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c7-base-b" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c7-exp-b" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+          <!-- APARTADO C -->
+          <div class="apartado-card" id="c7-card-c">
+            <div class="apartado-header">
+              <span class="apartado-badge">Apartado C · Producto Agrupado Dentro de la Potencia</span>
+              <button class="sys-btn sys-btn-accent" id="btn-c7-expand-c" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                📦 Desplegar Paquetes
+              </button>
+            </div>
+            <div class="apartado-title-expr" id="c7-expr-title-c"></div>
+            <div id="c7-packets-c" style="display: none; background: #201a0d; border: 1px dashed var(--br-border-aged); border-radius: 6px; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem;"></div>
+            <div class="apartado-inputs-row">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #facc15; font-weight: bold;">Potencia resultante:</span>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Base:</label>
+                <input type="number" id="input-c7-base-c" class="crypto-input" style="width: 100px; padding: 0.4rem 0.6rem;" placeholder="Base" />
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: #bbb;">Exponente:</label>
+                <input type="number" id="input-c7-exp-c" class="crypto-input" style="width: 110px; padding: 0.4rem 0.6rem;" placeholder="Exp" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c7"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c7-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c7">DESBLOQUEAR COMPUERTA 7 (3 APARTADOS) 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 8: AUDITORÍA DE SILVEXTRUX -->
+    <div class="chamber-card" id="screen-chamber-8" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 8: El Laboratorio del Profesor Despistado</h2>
+          <p>Auditoría de Pizarra · Caza de Mitos y Exponente Cero (a<sup>0</sup> = 1)</p>
+        </div>
+        <span class="chamber-badge">FASE 8 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Consejo de Álex</h4>
+          <p>«Mucho cuidado con las trampas visuales de la pizarra. Fijaos bien en si el signo menos está atrapado dentro de un paréntesis o no. Y recordad: al dividir un número entre sí mismo siempre da 1, por eso cualquier número con exponente cero vale 1.»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="crypto-terminal-shell">
+          <div style="color: #facc15; font-weight: 700;">
+            📝 AUDITORÍA DE AFIRMACIONES DE LA PIZARRA
+          </div>
+          <p style="font-size: 0.85rem; color: #d4cfba;">
+            Marcad para cada sentencia si es una ley matemática VERDADERA o un mito matemático FALSO:
+          </p>
+          <div id="c8-statements-container" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+            <!-- Declaraciones -->
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c8"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c8-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c8">DESBLOQUEAR COMPUERTA 8 🔓</button>
+      </div>
+    </div>
+
+    <!-- CÁMARA 9: EL CÓDIGO MAESTRO -->
+    <div class="chamber-card" id="screen-chamber-9" style="display: none;">
+      <div class="chamber-header-block">
+        <div class="chamber-title-group">
+          <h2>Cámara 9: El Código Maestro</h2>
+          <p>Consola de Emergencia Principal · Operaciones Combinadas de Potencias y Raíces</p>
+        </div>
+        <span class="chamber-badge">FASE FINAL 9 / 9</span>
+      </div>
+
+      <div class="alex-hint-box">
+        <div class="alex-mini-avatar">
+          <img src="/src/assets/images/alex_avatar_1794136128473.jpg" alt="Álex" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="portrait-fallback" style="font-size: 1rem; display: none;">Á</div>
+        </div>
+        <div class="alex-hint-content">
+          <h4>Último mensaje de Álex por el walkie-talkie</h4>
+          <p>«¡Es la salida hacia el patio exterior! Respetad escrupulosamente la jerarquía: resolved primero el bloque de potencias reduciendo exponentes, luego el radical exacto y el exponente cero. Solo al final haced la suma y resta. ¡Vosotros podéis!»</p>
+        </div>
+      </div>
+
+      <div class="interactive-stage">
+        <div class="crypto-terminal-shell">
+          <div style="color: var(--alarm-red); font-weight: 700; text-align: center;">
+            ⚠️ SECUENCIA CRIPTOGRÁFICA DE DESBLOQUEO TOTAL
+          </div>
+          <div class="crypto-expression-display" id="c9-expression-display">
+            <!-- Expresión -->
+          </div>
+
+          <div style="background: #201a0d; border: 1px solid var(--br-border-aged); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+            <div style="font-weight: 600; font-size: 0.85rem; color: #facc15;">
+              SUB-FASES DE RESOLUCIÓN EN EQUIPO:
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.8rem; color: #bbb; margin-bottom: 0.25rem;">
+                  1. Bloque de potencias simplificado:
+                </label>
+                <input type="number" id="input-c9-p1" class="crypto-input" style="width: 100%;" placeholder="Valor numérico de la potencia..." />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.8rem; color: #bbb; margin-bottom: 0.25rem;">
+                  2. Valor del radical exacto:
+                </label>
+                <input type="number" id="input-c9-p2" class="crypto-input" style="width: 100%;" placeholder="Raíz cuadrada..." />
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.8rem; color: var(--terminal-green); font-weight: 700; margin-bottom: 0.25rem;">
+                  3. Código Maestro Final:
+                </label>
+                <input type="number" id="input-c9-final" class="crypto-input" style="width: 100%; font-weight: 700; color: #4ade80;" placeholder="CÓDIGO ENTERO..." />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feedback-box" id="feedback-c9"></div>
+
+      <div class="action-row">
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: #aaa;">Puntuación: <span id="c9-live-score">0.0</span></span>
+        <button class="btn-unlock-gate" id="btn-submit-c9" style="background: var(--alarm-red); color: #fff;">
+          🚨 INTRODUCIR CÓDIGO MAESTRO Y ESCAPAR 🚨
+        </button>
+      </div>
+    </div>
+
+    <!-- PANTALLA 10: DIPLOMA DE SUPERVIVENCIA Y EVALUACIÓN -->
+    <div class="chamber-card" id="screen-diploma" style="display: none;">
+      <div class="diploma-wrapper" id="printable-diploma">
+        
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <svg style="width: 64px; height: 64px; margin: 0 auto; display: block;" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="#d4af37" stroke-width="2" stroke-dasharray="4,2"/>
+            <circle cx="50" cy="50" r="40" fill="#262013" stroke="#d4af37" stroke-width="2"/>
+            <polygon points="50,15 61,38 85,38 66,54 73,78 50,64 27,78 34,54 15,38 39,38" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="50" y="55" fill="#fbbf24" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle">2º ESO</text>
+          </svg>
+          <h1 style="font-size: 1.6rem; letter-spacing: 0.08em; color: #fbbf24; text-transform: uppercase; margin-top: 0.5rem;">
+            DIPLOMA DE SUPERVIVENCIA DEL LABORATORIO
+          </h1>
+          <h3 style="font-size: 0.9rem; font-family: var(--font-mono); color: #facc15; margin-top: 0.25rem;">
+            COMITÉ DE INVESTIGACIÓN MATEMÁTICA Y CIENCIAS LIMINALES · LOMLOE
+          </h3>
+        </div>
+
+        <div style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; text-align: justify;">
+          <p>
+            Por la presente se certifica que la pareja de investigadores formada por 
+            <strong style="color: #fbbf24;" id="dip-student1">[Estudiante 1]</strong> y 
+            <strong style="color: #fbbf24;" id="dip-student2">[Estudiante 2]</strong>, pertenecientes al grupo 
+            <strong style="color: #fbbf24;" id="dip-group">[Grupo]</strong>, bajo el distintivo de equipo 
+            <strong style="color: #fbbf24;" id="dip-team">[Equipo]</strong>, ha superado con éxito las 9 cámaras selladas por el Profesor Silvextrux en los Backrooms del departamento de ciencias.
+          </p>
+          <p style="margin-top: 0.65rem;">
+            Durante su misión demostraron un riguroso dominio del crecimiento exponencial (2<sup>n</sup>), la leyenda de Sissa, la transformación geométrica de rectángulos a cuadrados mediante la raíz cuadrada, la ubicación de números irracionales en la recta real mediante el Teorema de Pitágoras y las leyes operativas de potencias.
+          </p>
+        </div>
+
+        <div style="background: rgba(34, 197, 94, 0.12); border: 1px solid var(--terminal-green); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #aaa;">CALIFICACIÓN OFICIAL</div>
+            <div id="dip-score" style="font-size: 2rem; font-weight: 800; color: #4ade80; font-family: var(--font-mono);">10.0 / 10</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #aaa;">NIVEL DE COMPETENCIA</div>
+            <div id="dip-tier" style="font-size: 1.05rem; font-weight: 700; color: #fbbf24;">SOBRESALIENTE</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #aaa;">TIEMPO DE ESCAPE</div>
+            <div id="dip-time" style="font-size: 1.05rem; font-weight: 700; color: #fef08a; font-family: var(--font-mono);">00:00</div>
+          </div>
+        </div>
+
+        <!-- Formulario obligatorio de Metacognición en pareja -->
+        <div class="metacognition-grid">
+          <div style="font-weight: 700; font-size: 0.9rem; color: #fff;">
+            🧠 REGISTRO DE METACOGNICIÓN Y COOPERACIÓN EN PAREJA
+          </div>
+          <div class="metacog-item">
+            <label>1. ¿Qué descubrimiento matemático te ha sorprendido más de los Backrooms?</label>
+            <textarea id="meta-q1" placeholder="Ej: La velocidad con la que se disparan las potencias de 2 al doblar papel o con el trigo de Sissa..."></textarea>
+          </div>
+          <div class="metacog-item">
+            <label>2. ¿Cómo habéis colaborado en pareja para resolver los bloqueos?</label>
+            <textarea id="meta-q2" placeholder="Ej: Uno revisaba la teoría y el otro calculaba en papel, contrastando los resultados antes de teclear..."></textarea>
+          </div>
+          <div class="metacog-item">
+            <label>3. Breve valoración personal de la experiencia matemática:</label>
+            <textarea id="meta-q3" placeholder="Ej: Nos ha parecido muy motivador entender el sentido práctico y geométrico de los radicales..."></textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 1.25rem; margin-top: 1.5rem; font-size: 0.85rem; font-family: var(--font-mono); color: #bbb;">
+          <div>
+            <div>Fecha de Expedición: <span id="dip-date">--/--/----</span></div>
+            <div>Identificador Criptográfico: <span id="dip-uuid" style="color: #facc15;">BK-MAT-2026</span></div>
+          </div>
+          <div style="text-align: right;">
+            <div style="border-bottom: 1px solid #bbb; width: 180px; margin-bottom: 0.25rem;"></div>
+            <div>Prof. Silvextrux & Álex</div>
+            <div style="font-size: 0.75rem; color: #888;">Firma del Consejo Didáctico</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="action-row" style="margin-top: 1.5rem; justify-content: space-between;">
+        <button class="sys-btn" id="btn-restart-game">
+          🔄 Reiniciar Nueva Aventura
+        </button>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button class="sys-btn" id="btn-diploma-download-html" title="Descargar una copia completa de la aventura en archivo HTML">
+            💾 Guardar Juego (HTML)
+          </button>
+          <!-- Botón de descarga de imagen de diploma directa y garantizada -->
+          <button class="btn-unlock-gate" id="btn-download-diploma-image">
+            📥 DESCARGAR DIPLOMA (IMAGEN PNG OFICIAL)
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODAL: BIBLIOTECA SECRETA (LEYENDA DE SISSA)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-sissa">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>📖 La Leyenda del Ajedrez: El Sabio Sissa y el Rey Sheram</h3>
+        <button class="modal-close-btn" id="btn-close-sissa">&times;</button>
+      </div>
+      <div style="font-size: 0.9rem; line-height: 1.6; color: #fef08a; display: flex; flex-direction: column; gap: 0.75rem;">
+        <p>
+          Cuenta la leyenda que hace siglos, en la antigua India, el poderoso <strong>Rey Sheram</strong> se encontraba profundamente sumido en la tristeza y el aburrimiento. Para alegrarlo, el sabio y humilde inventor <strong>Sissa</strong> le presentó un juego nuevo jugado sobre un tablero de 64 casillas: <em>el ajedrez</em>.
+        </p>
+        <p>
+          El rey quedó tan fascinado con la estrategia y belleza del juego que le dijo al sabio: <em>«Pídeme lo que quieras como recompensa, incluso la mitad de mi reino o cofres llenos de oro y joyas, y te lo concederé»</em>.
+        </p>
+        <p>
+          Sissa, sonriendo con modestia, respondió: <em>«Gran soberano, me conformo con un grano de trigo en la primera casilla del tablero, dos granos en la segunda, cuatro en la tercera, ocho en la cuarta, dieciséis en la quinta... y así sucesivamente, duplicando la cantidad en cada casilla hasta completar las sesenta y cuatro»</em>.
+        </p>
+        <p>
+          El rey se indignó al principio, creyendo que Sissa le hacía un desaire pidiendo una recompensa tan insignificante. Mandó llamar de inmediato a sus matemáticos y contadores de palacio para que calculasen los sacos de trigo y se los entregasen de inmediato.
+        </p>
+        <p style="background: rgba(245, 158, 11, 0.15); border-left: 3px solid #eab308; padding: 0.75rem; border-radius: 4px;">
+          Tras varios días de arduos cálculos con ábacos, el matemático principal se postró temblando ante el trono: <em>«Majestad, no podéis pagar la deuda. Ni reuniendo todo el trigo de vuestros graneros, ni el de todos los reinos vecinos, ni sembrando todos los continentes de la Tierra durante siglos enteros alcanzaría para reunir <strong>18.446.744.073.709.551.615 granos</strong> (2<sup>64</sup> - 1)»</em>.
+        </p>
+        <p>
+          El rey Sheram comprendió entonces la lección magistral: el crecimiento exponencial y el poder de las potencias superan con creces la intuición humana más optimista.
+        </p>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+        <button class="sys-btn sys-btn-accent" id="btn-return-from-sissa">
+          Volver a la Cámara 1
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: PANEL DOCENTE
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-teacher">
+    <div class="modal-window" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3>🔐 Panel de Control Docente (LOMLOE 2.º ESO)</h3>
+        <button class="modal-close-btn" id="btn-close-teacher">&times;</button>
+      </div>
+
+      <div id="teacher-auth-box" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <p style="font-size: 0.85rem; color: #d4cfba;">
+          Introduce la contraseña docente configurada para inspeccionar calificaciones o exportar datos.
+        </p>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="password" id="input-teacher-pwd" class="crypto-input" placeholder="Contraseña de docente (predeterminada: profe2026)" />
+          <button class="sys-btn sys-btn-accent" id="btn-verify-teacher-pwd">Acceder</button>
+        </div>
+        <span id="teacher-pwd-error" style="color: var(--alarm-red); font-size: 0.8rem; display: none;">Contraseña incorrecta. (Prueba con profe2026)</span>
+      </div>
+
+      <div id="teacher-dashboard" style="display: none; flex-direction: column; gap: 1.25rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem;">
+          <div style="background: var(--br-card-surface); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--br-border-aged);">
+            <div style="font-size: 0.75rem; color: #bbb;">EQUIPOS REGISTRADOS</div>
+            <div id="stat-total-teams" style="font-size: 1.4rem; font-weight: 700; color: #fff;">0</div>
+          </div>
+          <div style="background: var(--br-card-surface); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--br-border-aged);">
+            <div style="font-size: 0.75rem; color: #bbb;">MEDIA DE CALIFICACIÓN</div>
+            <div id="stat-avg-score" style="font-size: 1.4rem; font-weight: 700; color: #4ade80;">0.0 / 10</div>
+          </div>
+          <div style="background: var(--br-card-surface); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--br-border-aged);">
+            <div style="font-size: 0.75rem; color: #bbb;">MISIÓN COMPLETADA</div>
+            <div id="stat-completed-teams" style="font-size: 1.4rem; font-weight: 700; color: #facc15;">0</div>
+          </div>
+        </div>
+
+        <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--br-border-aged); border-radius: 6px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; font-family: var(--font-mono); text-align: left;">
+            <thead style="background: var(--br-card-surface); color: #facc15; position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 0.5rem;">Fecha</th>
+                <th style="padding: 0.5rem;">Equipo</th>
+                <th style="padding: 0.5rem;">Alumnos</th>
+                <th style="padding: 0.5rem;">Grupo</th>
+                <th style="padding: 0.5rem;">Puntos</th>
+                <th style="padding: 0.5rem;">Fase</th>
+              </tr>
+            </thead>
+            <tbody id="teacher-records-tbody"></tbody>
+          </table>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="sys-btn" id="btn-export-csv">📥 Exportar a CSV (Excel)</button>
+          <button class="sys-btn" id="btn-export-json">📥 Exportar a JSON</button>
+          <button class="sys-btn sys-btn-accent" id="btn-download-standalone-html">💾 Descargar Archivo HTML Único</button>
+          <button class="sys-btn sys-btn-danger" id="btn-clear-teacher-data">🗑️ Borrar Historial</button>
+        </div>
+
+        <div style="background: #141008; border: 1px solid var(--br-border-aged); border-radius: 8px; padding: 1rem; font-size: 0.825rem; color: #d4cfba; line-height: 1.5;">
+          <div style="color: #facc15; font-weight: 700; margin-bottom: 0.4rem;">
+            📌 CÓMO USAR EN EDUCAMOSCLM (MOODLE)
+          </div>
+          <ol style="margin-left: 1.25rem; display: flex; flex-direction: column; gap: 0.35rem;">
+            <li>Pulsa en <strong>«Descargar Archivo HTML Único»</strong>.</li>
+            <li>En tu aula virtual de EducamosCLM / Moodle, activa el modo de edición y añade un recurso tipo <strong>«Archivo»</strong>.</li>
+            <li>Sube el archivo HTML y en <strong>Apariencia</strong> selecciona <em>«Incrustar»</em> o <em>«En ventana emergente»</em>.</li>
+            <li>No requiere instalación ni conexión a internet en los ordenadores de los alumnos.</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas oculto para renderizar y descargar el diploma en PNG de alta resolución -->
+  <canvas id="diploma-render-canvas" width="1200" height="850" style="display: none;"></canvas>
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT COMPLETA (AUDIO DE TENSIÓN, ARRASTRE SVG, LABS Y DIPLOMA)
+       ========================================================================== -->
+  <script>
+    const CONFIG = {
+      TEACHER_PASSWORD: "profe2026",
+      MAX_POINTS: 10.0,
+      POINTS_PER_CHAMBER: 1.11,
+      STORAGE_KEY: "BACKROOMS_MATH_2ESO_RECORDS",
+      GRAIN_WEIGHT_GRAMS: 0.05
+    };
+
+    // =========================================================================
+    // 1. MOTOR DE AUDIO PROCEDURAL DE TENSIÓN Y ZUMBIDO BACKROOMS
+    // =========================================================================
+    // =========================================================================
+    // 1. MOTOR DE AUDIO PROCEDURAL: MÚSICA DE TENSIÓN Y AMBIENTE BACKROOMS
+    // =========================================================================
+    class TensionAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.isMuted = true;
+        this.masterGain = null;
+        this.musicGain = null;
+        this.delayNode = null;
+        this.padOsc1 = null;
+        this.padOsc2 = null;
+        this.padOsc3 = null;
+        this.padFilter = null;
+        this.padLfo = null;
+        this.humOsc = null;
+        this.stepTimer = null;
+        this.step = 0;
+      }
+
+      init() {
+        if (!this.ctx) {
+          try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContextClass();
+          } catch (e) {
+            console.warn("AudioContext no disponible:", e);
+            return;
+          }
+        }
+        if (this.ctx.state === "suspended") {
+          this.ctx.resume();
+        }
+        this.isMuted = false;
+        if (!this.masterGain) {
+          this.buildTensionAudioGraph();
+        } else {
+          this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+          this.masterGain.gain.setValueAtTime(0.38, this.ctx.currentTime);
+        }
+        this.startMusicSequencer();
+      }
+
+      buildTensionAudioGraph() {
+        if (!this.ctx) return;
+
+        // Ganancia maestra audible y envolvente
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.38, this.ctx.currentTime);
+        this.masterGain.connect(this.ctx.destination);
+
+        // Bus de música melódica
+        this.musicGain = this.ctx.createGain();
+        this.musicGain.gain.setValueAtTime(0.85, this.ctx.currentTime);
+        this.musicGain.connect(this.masterGain);
+
+        // Bus de Efecto Eco/Reverb espacial (simula los pasillos infinitos)
+        this.delayNode = this.ctx.createDelay();
+        this.delayNode.delayTime.setValueAtTime(0.34, this.ctx.currentTime);
+
+        const delayFilter = this.ctx.createBiquadFilter();
+        delayFilter.type = "lowpass";
+        delayFilter.frequency.setValueAtTime(1400, this.ctx.currentTime);
+
+        const delayFeedback = this.ctx.createGain();
+        delayFeedback.gain.setValueAtTime(0.32, this.ctx.currentTime);
+
+        this.delayNode.connect(delayFilter);
+        delayFilter.connect(delayFeedback);
+        delayFeedback.connect(this.delayNode);
+        delayFilter.connect(this.masterGain);
+
+        // 1. Pad atmosférico de acordes oscuros (D menor cinematográfico)
+        this.padFilter = this.ctx.createBiquadFilter();
+        this.padFilter.type = "lowpass";
+        this.padFilter.frequency.setValueAtTime(340, this.ctx.currentTime);
+        this.padFilter.Q.setValueAtTime(2.2, this.ctx.currentTime);
+
+        const padGain = this.ctx.createGain();
+        padGain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+        this.padFilter.connect(padGain);
+        padGain.connect(this.masterGain);
+
+        // Trío de osciladores para un acorde etéreo suspendido (D2 + A2 + F3)
+        this.padOsc1 = this.ctx.createOscillator();
+        this.padOsc1.type = "sawtooth";
+        this.padOsc1.frequency.setValueAtTime(73.42, this.ctx.currentTime); // D2
+
+        this.padOsc2 = this.ctx.createOscillator();
+        this.padOsc2.type = "triangle";
+        this.padOsc2.frequency.setValueAtTime(110.00, this.ctx.currentTime); // A2
+        this.padOsc2.detune.setValueAtTime(7, this.ctx.currentTime);
+
+        this.padOsc3 = this.ctx.createOscillator();
+        this.padOsc3.type = "sine";
+        this.padOsc3.frequency.setValueAtTime(174.61, this.ctx.currentTime); // F3
+        this.padOsc3.detune.setValueAtTime(-6, this.ctx.currentTime);
+
+        // LFO lento que modula el filtro del pad para darle respiración siniestra
+        this.padLfo = this.ctx.createOscillator();
+        this.padLfo.frequency.setValueAtTime(0.09, this.ctx.currentTime);
+        const lfoDepth = this.ctx.createGain();
+        lfoDepth.gain.setValueAtTime(150, this.ctx.currentTime);
+        this.padLfo.connect(lfoDepth);
+        lfoDepth.connect(this.padFilter.frequency);
+
+        this.padOsc1.connect(this.padFilter);
+        this.padOsc2.connect(this.padFilter);
+        this.padOsc3.connect(this.padFilter);
+
+        this.padOsc1.start();
+        this.padOsc2.start();
+        this.padOsc3.start();
+        this.padLfo.start();
+
+        // 2. Textura sutil de balasto fluorescente (suave textura de fondo, sin tapar la melodía)
+        const humFilter = this.ctx.createBiquadFilter();
+        humFilter.type = "bandpass";
+        humFilter.frequency.setValueAtTime(100, this.ctx.currentTime);
+        humFilter.Q.setValueAtTime(3, this.ctx.currentTime);
+
+        const humGain = this.ctx.createGain();
+        humGain.gain.setValueAtTime(0.022, this.ctx.currentTime);
+
+        this.humOsc = this.ctx.createOscillator();
+        this.humOsc.type = "sawtooth";
+        this.humOsc.frequency.setValueAtTime(50, this.ctx.currentTime);
+
+        this.humOsc.connect(humFilter);
+        humFilter.connect(humGain);
+        humGain.connect(this.masterGain);
+        this.humOsc.start();
+      }
+
+      startMusicSequencer() {
+        if (this.stepTimer) return;
+        this.step = 0;
+
+        // Secuencia melódica de misterio y tensión en D menor armónico
+        // Claramente audible en cualquier altavoz (146 Hz a 350 Hz)
+        const melodyPattern = [
+          { freq: 146.83, dur: 0.38, beat: true },  // D3 (Pulso de tensión)
+          { freq: 174.61, dur: 0.32, beat: false }, // F3
+          { freq: 220.00, dur: 0.32, beat: false }, // A3
+          { freq: 293.66, dur: 0.36, beat: false }, // D4
+          { freq: 277.18, dur: 0.45, beat: true },  // C#4 (Tritono inquietante)
+          { freq: 220.00, dur: 0.30, beat: false }, // A3
+          { freq: 174.61, dur: 0.30, beat: false }, // F3
+          { freq: 196.00, dur: 0.35, beat: false }, // G3
+          { freq: 233.08, dur: 0.35, beat: true },  // Bb3
+          { freq: 293.66, dur: 0.32, beat: false }, // D4
+          { freq: 349.23, dur: 0.38, beat: false }, // F4
+          { freq: 329.63, dur: 0.34, beat: false }, // E4
+          { freq: 277.18, dur: 0.42, beat: true },  // C#4
+          { freq: 233.08, dur: 0.30, beat: false }, // Bb3
+          { freq: 220.00, dur: 0.35, beat: false }, // A3
+          { freq: 146.83, dur: 0.40, beat: false }  // D3
+        ];
+
+        this.stepTimer = setInterval(() => {
+          if (!this.ctx || this.isMuted) return;
+          if (this.ctx.state === "suspended") this.ctx.resume();
+
+          const stepData = melodyPattern[this.step % melodyPattern.length];
+          this.playMelodicNote(stepData.freq, stepData.dur);
+
+          // Pulso de latido / sonar en los tiempos fuertes
+          if (stepData.beat) {
+            this.playTensionPulse();
+          }
+
+          this.step++;
+        }, 440);
+      }
+
+      playMelodicNote(freq, duration) {
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        const osc = this.ctx.createOscillator();
+        const noteFilter = this.ctx.createBiquadFilter();
+        const noteGain = this.ctx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now);
+
+        noteFilter.type = "lowpass";
+        noteFilter.frequency.setValueAtTime(freq * 3.2, now);
+        noteFilter.Q.setValueAtTime(3.0, now);
+
+        noteGain.gain.setValueAtTime(0.0001, now);
+        noteGain.gain.linearRampToValueAtTime(0.20, now + 0.035);
+        noteGain.gain.exponentialRampToValueAtTime(0.0005, now + duration);
+
+        osc.connect(noteFilter);
+        noteFilter.connect(noteGain);
+
+        noteGain.connect(this.musicGain);
+        if (this.delayNode) {
+          noteGain.connect(this.delayNode);
+        }
+
+        osc.start(now);
+        osc.stop(now + duration + 0.05);
+      }
+
+      playTensionPulse() {
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+        const kickOsc = this.ctx.createOscillator();
+        const kickGain = this.ctx.createGain();
+
+        kickOsc.type = "sine";
+        kickOsc.frequency.setValueAtTime(95, now);
+        kickOsc.frequency.exponentialRampToValueAtTime(42, now + 0.22);
+
+        kickGain.gain.setValueAtTime(0.18, now);
+        kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+
+        kickOsc.connect(kickGain);
+        kickGain.connect(this.masterGain);
+
+        kickOsc.start(now);
+        kickOsc.stop(now + 0.25);
+      }
+
+      toggleMute() {
+        if (!this.ctx) {
+          this.init();
+          return false;
+        }
+        if (this.ctx.state === "suspended") {
+          this.ctx.resume();
+        }
+        this.isMuted = !this.isMuted;
+        if (this.masterGain) {
+          const target = this.isMuted ? 0 : 0.38;
+          this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+          this.masterGain.gain.linearRampToValueAtTime(target, this.ctx.currentTime + 0.1);
+        }
+        if (!this.isMuted && !this.stepTimer) {
+          this.startMusicSequencer();
+        }
+        return this.isMuted;
+      }
+
+      playClick() {
+        if (!this.ctx || this.isMuted) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(700, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.04);
+      }
+
+      playError() {
+        if (!this.ctx || this.isMuted) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(85, this.ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.35);
+      }
+
+      playUnlock() {
+        if (!this.ctx || this.isMuted) return;
+        const now = this.ctx.currentTime;
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+          gain.gain.setValueAtTime(0.18, now + idx * 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.45);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.09);
+          osc.stop(now + idx * 0.09 + 0.45);
+        });
+      }
+
+      playLaser() {
+        if (!this.ctx || this.isMuted) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(250, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1400, this.ctx.currentTime + 0.22);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.26);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.26);
+      }
+    }
+
+    const audio = new TensionAudioEngine();
+
+    // =========================================================================
+    // 2. ESTADO GLOBAL DE LA PARTIDA
+    // =========================================================================
+    const gameState = {
+      student1: "",
+      student2: "",
+      group: "",
+      team: "",
+      startTime: null,
+      endTime: null,
+      currentChamber: 0,
+      score: 0.0,
+      attempts: {},
+      c1Data: null,
+      c2Data: null,
+      c3Data: null,
+      c4Data: null,
+      c5Data: null,
+      c6Data: null,
+      c7Data: null,
+      c8Data: null,
+      c9Data: null,
+      metacognition: { q1: "", q2: "", q3: "" }
+    };
+
+    // =========================================================================
+    // 3. SOLILOQUIOS NARRATIVOS DE SILVEXTRUX (PANTALLAS SEPARADAS)
+    // =========================================================================
+    const SilvextruxSoliloquies = {
+      1: {
+        title: "Profesor Silvextrux: La Trampa de Sissa",
+        quote: "«Creíais que doblar un grano era una tontería infantil... ¡Bienvenidos a la trampa donde cayeron emperadores!»",
+        body: "Habéis cruzado la primera puerta del sótano. Ante vosotros se extiende un tablero monumental de 64 casillas cubierto de polvo. En la primera casilla coloqué un grano de trigo; en la segunda, dos; en la tercera, cuatro... La masa se acumula a una velocidad aterradora. Para franquear la esclusa hidráulica, debéis calcular con precisión la masa de trigo en la casilla que he fijado. ¡Ni todo el trigo de España os salvará si falláis!"
+      },
+      2: {
+        title: "Profesor Silvextrux: La Hoja Inquebrantable",
+        quote: "«Un milímetro parece nada. Cero coma uno milímetros es invisible. Pero multiplicadlo cuarenta veces y tocaréis las estrellas.»",
+        body: "Os encontráis en el taller de imprenta clausurado. Un pistón neumático presuriza un muro de papel de 0,1 milímetros de grosor base. Los humanos subestiman la base 2. Si pudierais doblar esta hoja repetidamente, su grosor atravesaría el techo, la atmósfera terrestre y alcanzaría la órbita lunar. Mis sensores exigen el número exacto de dobleces para superar la barrera física."
+      },
+      3: {
+        title: "Profesor Silvextrux: La Geometría Prohibida",
+        quote: "«He estirado el espacio de este laboratorio como si fuera goma. Pero el área total se conserva inmutable...»",
+        body: "Mirad a vuestro alrededor. Esta sala de geometría fue deformada en un pasillo rectangular largo y estrecho. La esclusa cuántica solo resuena ante la armonía de un cuadrado perfecto. Debéis conservar exactamente los mismos metros cuadrados de superficie y hallar la longitud exacta del lado que estabilizará el aula. ¿Sabréis extraer la raíz cuadrada o quedaréis atrapados en el pasillo?"
+      },
+      4: {
+        title: "Profesor Silvextrux: El Abismo de los Irracionales",
+        quote: "«Los números enteros son cómodos. Pero la realidad de la naturaleza está hecha de números que jamás terminan: los irracionales.»",
+        body: "Una grieta electromagnética bloquea el paso hacia el módulo de energía. Un haz láser debe proyectarse desde el origen (0,0) hasta un receptor exacto en la recta numérica. Pero el receptor no está en un número entero: está en una raíz irracional. Pitágoras descubrió que la hipotenusa de un triángulo rectángulo atrapa exactamente estos valores. Arrastrad el nodo, configurad los catetos y proyectad la diagonal."
+      },
+      5: {
+        title: "Profesor Silvextrux: El Multiplicador de Nodos",
+        quote: "«¡Multiplicad las bases, os lo suplico! ¡Cometed el error que cometen todos mis alumnos de segundo!»",
+        body: "Entráis en la sala de reactores. Dos flujos de potencia con la misma base están colapsando. La ignorancia hace que la gente multiplique las bases; pero si las desglosáis en sus factores elementales, comprenderéis qué ocurre realmente con los exponentes. Desglosad el circuito, descubrid la ley y sellad el multiplicador."
+      },
+      6: {
+        title: "Profesor Silvextrux: La Válvula de Purga",
+        quote: "«La presión en los conductos de vapor sube por segundos. La división de potencias es vuestra única purga.»",
+        body: "Los conductos de refrigeración están a punto de reventar por exceso de factores en el numerador. Para dividir potencias de la misma base, cada factor inferior puede aniquilar a un factor superior. Purgad los factores redundantes en la consola, observad cuántos sobreviven y reconfigurad la presión."
+      },
+      7: {
+        title: "Profesor Silvextrux: La Resonancia Anidada",
+        quote: "«Una potencia de una potencia es un bucle infinito que resuena dentro de sí mismo...»",
+        body: "El núcleo cuántico vibra en una frecuencia anidada. Tenéis paquetes de energía repetidos varias veces. Si no multiplicáis la frecuencia de forma adecuada, la estructura del edificio colapsará. Abrid los paquetes, observad la repetición y estabilizad el resonador."
+      },
+      8: {
+        title: "Profesor Silvextrux: La Pizarra del Despiste",
+        quote: "«En mi pizarra anoté teoremas inmortales... mezclados con los disparates y mitos más comunes de las libretas de secundaria.»",
+        body: "Mi mente es brillante, pero el cansancio me hizo registrar cinco afirmaciones en la pizarra: algunas son leyes algebraicas fundamentales; otras son falacias matemáticas atroces. Si dais por buena una sola falsedad, las alarmas de seguridad se dispararán. Auditad la pizarra con bisturí lógico."
+      },
+      9: {
+        title: "Profesor Silvextrux: El Código Maestro Final",
+        quote: "«Aquí termina vuestro viaje o vuestra estancia permanente en los Backrooms... La puerta principal hacia el exterior.»",
+        body: "Habéis llegado a la esclusa acorazada de salida del instituto. Una sola expresión combinada protege el cerrojo electromagnético: potencias de potencias, cocientes de potencias, raíces cuadradas exactas y la ley del exponente cero. Un solo número entero abrirá las puertas hacia el mundo real. ¡Demostrad el poder de los números!"
+      }
+    };
+
+    // =========================================================================
+    // 4. GENERADORES ALEATORIOS CON RESTRICCIONES RIGUROSAS
+    // =========================================================================
+    const ChallengeGenerators = {
+      genChamber1() {
+        const targetSquare = 21 + Math.floor(Math.random() * 5); // 21..25
+        const grains = Math.pow(2, targetSquare - 1);
+        const weightKg = Math.round((grains * CONFIG.GRAIN_WEIGHT_GRAMS) / 1000);
+        return { targetSquare, grains, weightKg };
+      },
+
+      genChamber2() {
+        const targets = [
+          { name: "la altura del profesor Silvextrux (1,80 metros)", minMeters: 1.80, correctFolds: 15 },
+          { name: "la canasta de baloncesto del pabellón (3,05 metros)", minMeters: 3.05, correctFolds: 15 },
+          { name: "el techo del laboratorio de ciencias (3,5 metros)", minMeters: 3.50, correctFolds: 16 },
+          { name: "la farola del patio exterior (8,0 metros)", minMeters: 8.0, correctFolds: 17 },
+          { name: "un poste de alta tensión del instituto (12,0 metros)", minMeters: 12.0, correctFolds: 17 },
+          { name: "un bloque de viviendas de 8 plantas (25,0 metros)", minMeters: 25.0, correctFolds: 18 },
+          { name: "la torre del campanario municipal (50,0 metros)", minMeters: 50.0, correctFolds: 19 }
+        ];
+        return targets[Math.floor(Math.random() * targets.length)];
+      },
+
+      // CÁMARA 3: Estricta restricción w != h y w != side (habitaciones estrictamente rectangulares no cuadradas)
+      genChamber3() {
+        const rooms = [
+          { w: 8, h: 18, area: 144, side: 12 },
+          { w: 9, h: 16, area: 144, side: 12 },
+          { w: 4, h: 49, area: 196, side: 14 },
+          { w: 5, h: 45, area: 225, side: 15 },
+          { w: 8, h: 32, area: 256, side: 16 },
+          { w: 9, h: 36, area: 324, side: 18 },
+          { w: 10, h: 40, area: 400, side: 20 },
+          { w: 12, h: 48, area: 576, side: 24 },
+          { w: 16, h: 36, area: 576, side: 24 },
+          { w: 9, h: 81, area: 729, side: 27 },
+          { w: 16, h: 49, area: 784, side: 28 },
+          { w: 10, h: 90, area: 900, side: 30 }
+        ];
+        return rooms[Math.floor(Math.random() * rooms.length)];
+      },
+
+      // CÁMARA 4: Pitágoras e Irracionales
+      genChamber4() {
+        const configs = [
+          { a: 1, b: 2, sumSq: 5, label: "√5 ≈ 2.236" },
+          { a: 2, b: 2, sumSq: 8, label: "√8 ≈ 2.828" },
+          { a: 1, b: 3, sumSq: 10, label: "√10 ≈ 3.162" },
+          { a: 2, b: 3, sumSq: 13, label: "√13 ≈ 3.606" },
+          { a: 1, b: 4, sumSq: 17, label: "√17 ≈ 4.123" }
+        ];
+        return configs[Math.floor(Math.random() * configs.length)];
+      },
+
+      // CÁMARA 5: Descubrimiento de Producto (3 Apartados A, B, C)
+      genChamber5() {
+        const basePoolA = [2, 3, 5, 7];
+        const baseA = basePoolA[Math.floor(Math.random() * basePoolA.length)];
+        const mA = 2 + Math.floor(Math.random() * 3); // 2..4
+        const nA = 2 + Math.floor(Math.random() * 3); // 2..4
+
+        const basePoolB = [2, 3, 5];
+        const baseB = basePoolB[Math.floor(Math.random() * basePoolB.length)];
+        const pB = 2 + Math.floor(Math.random() * 2); // 2..3
+        const qB = 2 + Math.floor(Math.random() * 3); // 2..4
+
+        const pairsC = [
+          { c: 2, d: 3, k: 3 },
+          { c: 2, d: 5, k: 4 },
+          { c: 3, d: 4, k: 2 },
+          { c: 2, d: 7, k: 3 },
+          { c: 5, d: 3, k: 3 }
+        ];
+        const chosenC = pairsC[Math.floor(Math.random() * pairsC.length)];
+
+        return {
+          partA: { base: baseA, m: mA, n: nA, correctBase: baseA, correctExp: mA + nA },
+          partB: { base: baseB, p: pB, q: qB, correctBase: baseB, correctExp: pB + 1 + qB },
+          partC: { c: chosenC.c, d: chosenC.d, k: chosenC.k, correctBase: chosenC.c * chosenC.d, correctExp: chosenC.k }
+        };
+      },
+
+      // CÁMARA 6: Descubrimiento de Cociente (3 Apartados A, B, C)
+      genChamber6() {
+        const basePoolA = [2, 3, 5, 7];
+        const baseA = basePoolA[Math.floor(Math.random() * basePoolA.length)];
+        const nA = 2 + Math.floor(Math.random() * 2); // 2..3
+        const diffA = 2 + Math.floor(Math.random() * 3); // 2..4
+        const mA = nA + diffA;
+
+        const basePoolB = [2, 3, 4, 5];
+        const baseB = basePoolB[Math.floor(Math.random() * basePoolB.length)];
+        const qB = 2 + Math.floor(Math.random() * 2); // 2..3
+        const diffB = 2 + Math.floor(Math.random() * 3); // 2..4
+        const pB = qB + diffB;
+
+        const pairsC = [
+          { a: 12, b: 4, k: 3 },
+          { a: 15, b: 5, k: 4 },
+          { a: 18, b: 6, k: 3 },
+          { a: 20, b: 5, k: 4 },
+          { a: 24, b: 6, k: 3 }
+        ];
+        const chosenC = pairsC[Math.floor(Math.random() * pairsC.length)];
+
+        return {
+          partA: { base: baseA, m: mA, n: nA, correctBase: baseA, correctExp: diffA },
+          partB: { base: baseB, p: pB, q: qB, correctBase: -baseB, correctExp: diffB },
+          partC: { a: chosenC.a, b: chosenC.b, k: chosenC.k, correctBase: chosenC.a / chosenC.b, correctExp: chosenC.k }
+        };
+      },
+
+      // CÁMARA 7: Descubrimiento de Potencia de Potencia (3 Apartados A, B, C)
+      genChamber7() {
+        const basePoolA = [2, 3, 5];
+        const baseA = basePoolA[Math.floor(Math.random() * basePoolA.length)];
+        const mA = 2 + Math.floor(Math.random() * 2); // 2..3
+        const nA = 2 + Math.floor(Math.random() * 3); // 2..4
+
+        const basePoolB = [2, 3, 5];
+        const baseB = basePoolB[Math.floor(Math.random() * basePoolB.length)];
+        const pB = 2;
+        const qB = 2 + Math.floor(Math.random() * 2); // 2..3
+        const rB = 2;
+
+        const basePoolC = [2, 3];
+        const baseC = basePoolC[Math.floor(Math.random() * basePoolC.length)];
+        const mC = 1 + Math.floor(Math.random() * 2); // 1..2
+        const nC = 2 + Math.floor(Math.random() * 2); // 2..3
+        const pC = 2;
+
+        return {
+          partA: { base: baseA, m: mA, n: nA, correctBase: baseA, correctExp: mA * nA },
+          partB: { base: baseB, p: pB, q: qB, r: rB, correctBase: baseB, correctExp: pB * qB * rB },
+          partC: { base: baseC, m: mC, n: nC, p: pC, correctBase: baseC, correctExp: (mC + nC) * pC }
+        };
+      },
+
+      // CÁMARA 8: Auditoría
+      genChamber8() {
+        const pool = [
+          { id: "s1", text: "Para cualquier número distinto de cero, a⁰ = 1.", isTrue: true, explanation: "Demostrado: aⁿ / aⁿ = aⁿ⁻ⁿ = a⁰ = 1." },
+          { id: "s2", text: "El resultado de (-3)² es igual a -9.", isTrue: false, explanation: "Falso: (-3)·(-3) = +9. El exponente par anula el signo negativo." },
+          { id: "s3", text: "La operación 2⁴ · 2³ es igual a 4⁷.", isTrue: false, explanation: "Falso: La base no se multiplica. La base se mantiene (2⁷)." },
+          { id: "s4", text: "Cualquier número elevado al exponente 1 es igual a sí mismo (a¹ = a).", isTrue: true, explanation: "Verdadero: El exponente 1 indica un único factor de la base." },
+          { id: "s5", text: "(a + b)² es exactamente igual a a² + b².", isTrue: false, explanation: "Falso: Es el error más común. Falta el doble producto central: a² + 2ab + b²." }
+        ];
+        return { statements: pool.sort(() => Math.random() - 0.5).slice(0, 4) };
+      },
+
+      // CÁMARA 9: Código Maestro
+      genChamber9() {
+        const base = 2;
+        const m = 2, n = 3; // (2^2)^3 = 2^6
+        const p = 2; // · 2^2 = 2^8
+        const q = 5; // / 2^5 = 2^3 = 8
+        const powerPart = Math.pow(base, (m * n + p) - q); // 8
+
+        const roots = [
+          { r: 49, val: 7 },
+          { r: 64, val: 8 },
+          { r: 81, val: 9 },
+          { r: 100, val: 10 }
+        ];
+        const chosenRoot = roots[Math.floor(Math.random() * roots.length)];
+        const zeroExpPart = 1; // 7^0 = 1
+
+        const finalCode = powerPart + chosenRoot.val - zeroExpPart;
+        return {
+          base, m, n, p, q,
+          powerPart,
+          rootR: chosenRoot.r,
+          rootVal: chosenRoot.val,
+          finalCode
+        };
+      }
+    };
+
+    // =========================================================================
+    // 5. CONTROLADOR DE PANTALLAS Y FLUJO (SOLILOQUIO PREVIO -> RETO ACTIVO)
+    // =========================================================================
+    let targetChamberPending = 1;
+
+    function goToChamberIntro(chamberNum) {
+      targetChamberPending = chamberNum;
+      gameState.currentChamber = chamberNum;
+
+      // Ocultar todas las tarjetas
+      hideAllScreens();
+
+      // Configurar datos del soliloquio de Silvextrux
+      const sol = SilvextruxSoliloquies[chamberNum];
+      document.getElementById("intro-chamber-tag").textContent = `CÁMARA ${chamberNum} / 9`;
+      document.getElementById("intro-soliloquy-title").textContent = sol.title;
+      document.getElementById("intro-soliloquy-quote").textContent = sol.quote;
+      document.getElementById("intro-soliloquy-body").textContent = sol.body;
+
+      document.getElementById("screen-silvextrux-intro").style.display = "flex";
+      updateProgressTracker(chamberNum);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function enterChamberActive(chamberNum) {
+      hideAllScreens();
+      const chamberScreen = document.getElementById(`screen-chamber-${chamberNum}`);
+      if (chamberScreen) chamberScreen.style.display = "flex";
+      updateProgressTracker(chamberNum);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      saveCurrentSession(false);
+    }
+
+    function hideAllScreens() {
+      const screens = [
+        "screen-lobby",
+        "screen-silvextrux-intro",
+        "screen-chamber-1",
+        "screen-chamber-2",
+        "screen-chamber-3",
+        "screen-chamber-4",
+        "screen-chamber-5",
+        "screen-chamber-6",
+        "screen-chamber-7",
+        "screen-chamber-8",
+        "screen-chamber-9",
+        "screen-diploma"
+      ];
+      screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+      });
+    }
+
+    function updateProgressTracker(chamberNum) {
+      for (let i = 1; i <= 9; i++) {
+        const step = document.getElementById(`pstep-${i}`);
+        if (!step) continue;
+        step.classList.remove("active", "completed");
+        if (i < chamberNum) step.classList.add("completed");
+        else if (i === chamberNum) step.classList.add("active");
+      }
+      const titleDisplay = document.getElementById("display-room-title");
+      if (chamberNum === 0) titleDisplay.textContent = "Vestíbulo";
+      else if (chamberNum <= 9) titleDisplay.textContent = `Cámara ${chamberNum} / 9`;
+      else titleDisplay.textContent = "Diploma";
+    }
+
+    // =========================================================================
+    // 6. INICIALIZACIÓN DE CÁMARAS Y EVENTOS
+    // =========================================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Audio toggle
+      const btnToggleSound = document.getElementById("btn-toggle-sound");
+      btnToggleSound.addEventListener("click", () => {
+        const isMuted = audio.toggleMute();
+        document.getElementById("sound-icon").textContent = isMuted ? "🔇" : "🔊";
+        document.getElementById("sound-label").textContent = isMuted ? "Música: OFF" : "Música: ON";
+      });
+
+      // Inicio de aventura desde el lobby
+      document.getElementById("btn-start-adventure").addEventListener("click", (e) => {
+        e.preventDefault();
+        const s1 = document.getElementById("input-student1").value.trim();
+        const s2 = document.getElementById("input-student2").value.trim();
+        const grp = document.getElementById("input-group").value.trim();
+        const team = document.getElementById("input-team").value.trim();
+
+        if (!s1 || !s2 || !grp || !team) {
+          const lobbyErr = document.getElementById("lobby-error-msg");
+          if (lobbyErr) {
+            lobbyErr.textContent = "⚠️ Por favor, rellenad los nombres de los dos integrantes, el grupo y el nombre de equipo.";
+            lobbyErr.style.display = "block";
+          }
+          return;
+        }
+
+        // Iniciar audio procedural de tensión
+        audio.init();
+        document.getElementById("sound-icon").textContent = "🔊";
+        document.getElementById("sound-label").textContent = "Música: ON";
+
+        gameState.student1 = s1;
+        gameState.student2 = s2;
+        gameState.group = grp;
+        gameState.team = team;
+        gameState.startTime = new Date();
+        gameState.score = 0.0;
+
+        document.getElementById("display-team-name").textContent = `Equipo: ${team} (${grp})`;
+        document.getElementById("display-score-top").textContent = `Puntos: 0.0 / 10`;
+
+        // Ir a la primera transmisión de Silvextrux
+        goToChamberIntro(1);
+      });
+
+      // Botón avanzar desde la intro de Silvextrux
+      document.getElementById("btn-advance-from-intro").addEventListener("click", () => {
+        audio.playClick();
+        enterChamberActive(targetChamberPending);
+      });
+
+      // Modal Leyenda Sissa
+      const btnOpenSissa = document.getElementById("btn-open-sissa-story");
+      const modalSissa = document.getElementById("modal-sissa");
+      if (btnOpenSissa) {
+        btnOpenSissa.addEventListener("click", () => {
+          audio.playClick();
+          modalSissa.classList.add("open");
+        });
+      }
+      document.getElementById("btn-close-sissa").addEventListener("click", () => {
+        audio.playClick();
+        modalSissa.classList.remove("open");
+      });
+      document.getElementById("btn-return-from-sissa").addEventListener("click", () => {
+        audio.playClick();
+        modalSissa.classList.remove("open");
+      });
+
+      // Panel docente
+      document.getElementById("btn-open-teacher").addEventListener("click", () => {
+        audio.playClick();
+        document.getElementById("modal-teacher").classList.add("open");
+        document.getElementById("input-teacher-pwd").value = "";
+        document.getElementById("teacher-pwd-error").style.display = "none";
+      });
+      document.getElementById("btn-close-teacher").addEventListener("click", () => {
+        audio.playClick();
+        document.getElementById("modal-teacher").classList.remove("open");
+      });
+      document.getElementById("btn-verify-teacher-pwd").addEventListener("click", () => {
+        if (document.getElementById("input-teacher-pwd").value.trim() === CONFIG.TEACHER_PASSWORD) {
+          audio.playUnlock();
+          document.getElementById("teacher-auth-box").style.display = "none";
+          document.getElementById("teacher-dashboard").style.display = "flex";
+          renderTeacherDashboard();
+        } else {
+          audio.playError();
+          document.getElementById("teacher-pwd-error").style.display = "block";
+        }
+      });
+
+      document.getElementById("btn-export-csv").addEventListener("click", exportRecordsToCSV);
+      document.getElementById("btn-export-json").addEventListener("click", exportRecordsToJSON);
+      document.getElementById("btn-download-standalone-html").addEventListener("click", downloadStandaloneFile);
+      const navDownloadBtn = document.getElementById("btn-nav-download-html");
+      if (navDownloadBtn) navDownloadBtn.addEventListener("click", downloadStandaloneFile);
+      const lobbyDownloadBtn = document.getElementById("btn-lobby-download-html");
+      if (lobbyDownloadBtn) lobbyDownloadBtn.addEventListener("click", downloadStandaloneFile);
+      const dipDownloadBtn = document.getElementById("btn-diploma-download-html");
+      if (dipDownloadBtn) dipDownloadBtn.addEventListener("click", downloadStandaloneFile);
+      document.getElementById("btn-clear-teacher-data").addEventListener("click", clearTeacherRecords);
+
+      // Inicializar las 9 cámaras
+      initChamber1();
+      initChamber2();
+      initChamber3();
+      initChamber4();
+      initChamber5();
+      initChamber6();
+      initChamber7();
+      initChamber8();
+      initChamber9();
+      initDiplomaScreen();
+    });
+
+    // =========================================================================
+    // CÁMARA 1: TRIGO Y AJEDREZ
+    // =========================================================================
+    function initChamber1() {
+      const data = ChallengeGenerators.genChamber1();
+      gameState.c1Data = data;
+
+      const boardEl = document.getElementById("chessboard-element");
+      const inspectorTag = document.getElementById("chess-inspector-tag");
+      const challengeText = document.getElementById("chamber-1-challenge-text");
+
+      challengeText.innerHTML = `
+        La cerradura binaria exige introducir la <strong>masa total en kilogramos</strong> del trigo que reposa exactamente en la 
+        <strong style="color: #facc15;">casilla número ${data.targetSquare}</strong>.<br>
+        <span style="font-size: 0.825rem; color: #d4cfba;">
+        (Dato físico: 1 grano = <strong>0,05 gramos</strong>. Recordad que <strong>1 kg = 1.000 g</strong>. Investigad el tablero interactivo y la tabla para deducir cuántos granos corresponden a dicha casilla y calculad su masa).
+        </span>
+      `;
+
+      boardEl.innerHTML = "";
+      for (let i = 1; i <= 64; i++) {
+        const cell = document.createElement("div");
+        const row = Math.floor((i - 1) / 8);
+        const col = (i - 1) % 8;
+        const isDark = (row + col) % 2 === 1;
+
+        cell.className = `chess-cell ${isDark ? 'dark' : 'light'}`;
+        if (i === data.targetSquare) {
+          cell.classList.add("target-square");
+          cell.title = `Casilla Objetivo ${i}`;
+        }
+        if (i === 1) cell.classList.add("active-square");
+        cell.textContent = i;
+
+        cell.addEventListener("click", () => {
+          audio.playClick();
+          document.querySelectorAll(".chess-cell").forEach(c => c.classList.remove("active-square"));
+          cell.classList.add("active-square");
+          const grainsInSq = i <= 30 ? Math.pow(2, i - 1).toLocaleString('es-ES') : `2^${i - 1}`;
+          inspectorTag.innerHTML = `Casilla seleccionada: ${i} · Granos: ${grainsInSq} (2<sup>${i - 1}</sup>)`;
+        });
+
+        boardEl.appendChild(cell);
+      }
+
+      const btnSubmit = document.getElementById("btn-submit-c1");
+      const feedback = document.getElementById("feedback-c1");
+
+      btnSubmit.addEventListener("click", () => {
+        const val = parseInt(document.getElementById("input-c1-weight").value.trim(), 10);
+        gameState.attempts[1] = (gameState.attempts[1] || 0) + 1;
+
+        if (!isNaN(val) && Math.abs(val - data.weightKg) <= 2) {
+          audio.playUnlock();
+          awardPoints(1);
+          showFeedback(feedback, true, `¡Compuerta 1 Desbloqueada! Exacto: ${data.grains.toLocaleString('es-ES')} granos pesan aproximadamente ${data.weightKg.toLocaleString('es-ES')} kg. ¡El crecimiento exponencial supera la intuición humana!`);
+          setTimeout(() => goToChamberIntro(2), 1600);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Cálculo erróneo. Deducid cuántos granos corresponden a la casilla ${data.targetSquare} observando la regla de duplicación del tablero, multiplicad esa cantidad por 0,05 gramos para obtener la masa en gramos, y dividid entre 1.000 para pasar a kilogramos.`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 2: PAPEL DE CALIBRACIÓN
+    // =========================================================================
+    function initChamber2() {
+      const data = ChallengeGenerators.genChamber2();
+      gameState.c2Data = data;
+
+      const slider = document.getElementById("paper-folds-slider");
+      const labelFolds = document.getElementById("slider-folds-label");
+      const compTitle = document.getElementById("paper-thickness-title");
+      const compDesc = document.getElementById("paper-thickness-desc");
+      const challengeText = document.getElementById("chamber-2-challenge-text");
+
+      challengeText.innerHTML = `
+        El sensor de compresión del muro está calibrado a <strong>${data.name}</strong>.<br>
+        El calibrador solo permite probar hasta n = 8 dobleces. Deducid la ley matemática <em>e<sub>n</sub> = 0,1 mm · 2<sup>n</sup></em> y calculad en vuestro cuaderno el 
+        <strong>número mínimo de dobleces (n)</strong> necesarios para igualar o superar dicha altura.
+      `;
+
+      slider.addEventListener("input", (e) => {
+        const folds = parseInt(e.target.value, 10);
+        labelFolds.textContent = `n = ${folds} dobleces`;
+
+        const layers = Math.pow(2, folds);
+        const thicknessMm = (0.1 * layers).toFixed(1);
+        const thicknessCm = (thicknessMm / 10).toFixed(2);
+
+        compTitle.innerHTML = `Cálculo: e<sub>${folds}</sub> = 0,1 mm · 2<sup>${folds}</sup> = 0,1 mm · ${layers.toLocaleString('es-ES')} = <strong>${thicknessMm} mm</strong> (${thicknessCm} cm)`;
+        compDesc.textContent = folds === 0 ? "Una hoja estándar de cuaderno escolar (1 capa)." : `Grosor de ${layers.toLocaleString('es-ES')} capas de papel comprimido. ¡Cada doblez duplica el anterior!`;
+      });
+
+      const btnSubmit = document.getElementById("btn-submit-c2");
+      const feedback = document.getElementById("feedback-c2");
+
+      btnSubmit.addEventListener("click", () => {
+        const val = parseInt(document.getElementById("input-c2-folds").value.trim(), 10);
+        gameState.attempts[2] = (gameState.attempts[2] || 0) + 1;
+
+        if (val === data.correctFolds) {
+          audio.playUnlock();
+          awardPoints(2);
+          showFeedback(feedback, true, `¡Compuerta 2 Abierta! Con ${data.correctFolds} dobleces el grosor alcanza ${(0.1 * Math.pow(2, data.correctFolds) / 1000).toFixed(2)} m, superando la altura fijada.`);
+          setTimeout(() => goToChamberIntro(3), 1600);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Número de dobleces incorrecto. Continuad calculando en vuestro cuaderno: con n = 14 se alcanzan 1,64 m; con n = 15 se alcanzan 3,28 m; con n = 16 son 6,55 m... ¿Qué n supera por primera vez ${data.minMeters} m?`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 3: LA SALA CUADRADA (ESTRICTAMENTE w != h Y RESPONSIVE)
+    // =========================================================================
+    function initChamber3() {
+      const data = ChallengeGenerators.genChamber3();
+      gameState.c3Data = data;
+
+      document.getElementById("chamber-3-specs").innerHTML = `
+        La sala deformada actual mide <strong style="color: #facc15;">${data.w} metros</strong> de ancho por 
+        <strong style="color: #facc15;">${data.h} metros</strong> de largo. (¡Lados claramente desiguales!).
+      `;
+
+      // Renderizado responsivo de SVG contenido
+      const svg = document.getElementById("svg-geometry-room");
+      svg.innerHTML = `
+        <rect x="20" y="30" width="220" height="120" fill="rgba(202, 138, 4, 0.15)" stroke="#ca8a04" stroke-width="2"/>
+        <text x="130" y="22" fill="#fef08a" font-size="12" font-family="monospace" text-anchor="middle">Largo = ${data.h} m</text>
+        <text x="12" y="95" fill="#fef08a" font-size="12" font-family="monospace" text-anchor="middle" transform="rotate(-90 12,95)">Ancho = ${data.w} m</text>
+        <text x="130" y="95" fill="#facc15" font-size="13" font-family="monospace" font-weight="bold" text-anchor="middle">SALA RECTANGULAR</text>
+
+        <!-- Flecha de conservación de área -->
+        <path d="M 260 90 L 320 90 M 310 80 L 320 90 L 310 100" stroke="#facc15" stroke-width="2.5" fill="none"/>
+        <text x="290" y="75" fill="#facc15" font-size="10" font-family="monospace" text-anchor="middle">MISMA ÁREA</text>
+
+        <!-- Sala Cuadrada -->
+        <rect x="345" y="25" width="130" height="130" fill="rgba(34, 197, 94, 0.15)" stroke="#22c55e" stroke-width="2"/>
+        <text x="410" y="18" fill="#4ade80" font-size="12" font-family="monospace" text-anchor="middle">Lado = l</text>
+        <text x="335" y="95" fill="#4ade80" font-size="12" font-family="monospace" text-anchor="middle" transform="rotate(-90 335,95)">Lado = l</text>
+        <text x="410" y="95" fill="#4ade80" font-size="13" font-family="monospace" font-weight="bold" text-anchor="middle">SALA CUADRADA</text>
+      `;
+
+      const btnSubmit = document.getElementById("btn-submit-c3");
+      const feedback = document.getElementById("feedback-c3");
+
+      btnSubmit.addEventListener("click", () => {
+        const areaVal = parseInt(document.getElementById("input-c3-area").value.trim(), 10);
+        const sideVal = parseInt(document.getElementById("input-c3-side").value.trim(), 10);
+        gameState.attempts[3] = (gameState.attempts[3] || 0) + 1;
+
+        if (areaVal === data.area && sideVal === data.side) {
+          audio.playUnlock();
+          awardPoints(3);
+          showFeedback(feedback, true, `¡Compuerta 3 Reconfigurada! Área = ${data.w} × ${data.h} = ${data.area} m². Raíz cuadrada exacta: l = √${data.area} = ${data.side} metros.`);
+          setTimeout(() => goToChamberIntro(4), 1600);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Valores incorrectos. El área rectangular es ${data.w} × ${data.h} = ${data.w * data.h} m². Buscad el número que elevado al cuadrado dé exactamente esa superficie.`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 4: EL PUENTE LÁSER DE PITÁGORAS (ARRASTRE INTERACTIVO)
+    // =========================================================================
+    function initChamber4() {
+      const data = ChallengeGenerators.genChamber4();
+      gameState.c4Data = {
+        target: data,
+        currentA: 1,
+        currentB: 1,
+        arcProjected: false,
+        isDragging: false
+      };
+
+      document.getElementById("chamber-4-challenge-text").innerHTML = `
+        El sensor óptico exige construir con la diagonal láser exactamente el número irracional:
+        <strong style="color: #facc15; font-size: 1.15rem;">${data.label}</strong>.<br>
+        Arrastrad el <strong>nodo amarillo</strong> hasta conseguir que los catetos cumplan <em>a<sup>2</sup> + b<sup>2</sup> = ${data.sumSq}</em>.
+      `;
+
+      const svg = document.getElementById("svg-laser-bridge");
+      const currentCalcText = document.getElementById("chamber-4-current-calc");
+
+      function renderLaserBridge() {
+        const st = gameState.c4Data;
+        const ox = 70;
+        const oy = 210;
+        const scale = 95; // 95 px por unidad
+
+        const ax = ox + st.currentA * scale;
+        const ay = oy;
+        const bx = ax;
+        const by = oy - st.currentB * scale;
+
+        const sumSq = st.currentA * st.currentA + st.currentB * st.currentB;
+        const hyp = Math.sqrt(sumSq);
+
+        currentCalcText.innerHTML = `
+          Configuración actual: √(${st.currentA}<sup>2</sup> + ${st.currentB}<sup>2</sup>) = √${sumSq} ≈ ${hyp.toFixed(3)}
+        `;
+
+        let arcSvg = "";
+        const arcRadius = hyp * scale;
+        const arcEndX = ox + arcRadius;
+
+        if (st.arcProjected) {
+          arcSvg = `
+            <path d="M ${bx} ${by} A ${arcRadius} ${arcRadius} 0 0 1 ${arcEndX} ${oy}" fill="none" stroke="#facc15" stroke-width="2.5" stroke-dasharray="5,4"/>
+            <circle cx="${arcEndX}" cy="${oy}" r="6" fill="#facc15"/>
+            <text x="${arcEndX}" y="${oy + 28}" fill="#facc15" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">√${sumSq}</text>
+          `;
+        }
+
+        // Ticks de la recta real 0 a 5
+        let ticksSvg = "";
+        for (let i = 0; i <= 5; i++) {
+          const tx = ox + i * scale;
+          ticksSvg += `
+            <line x1="${tx}" y1="${oy - 7}" x2="${tx}" y2="${oy + 7}" stroke="#786027" stroke-width="2"/>
+            <text x="${tx}" y="${oy + 22}" fill="#d4cfba" font-size="11" font-family="monospace" text-anchor="middle">${i}</text>
+          `;
+        }
+
+        svg.innerHTML = `
+          <!-- Recta Real Milimetrada -->
+          <line x1="30" y1="${oy}" x2="620" y2="${oy}" stroke="#786027" stroke-width="2"/>
+          ${ticksSvg}
+
+          <!-- Cuadrícula tenue -->
+          <rect x="${ox}" y="${by}" width="${st.currentA * scale}" height="${st.currentB * scale}" fill="rgba(234, 179, 8, 0.05)" stroke="#45381d" stroke-dasharray="3,3"/>
+
+          <!-- Cateto a (base) -->
+          <line x1="${ox}" y1="${oy}" x2="${ax}" y2="${ay}" stroke="#38bdf8" stroke-width="3"/>
+          <text x="${(ox + ax) / 2}" y="${oy - 8}" fill="#38bdf8" font-size="12" font-family="monospace" text-anchor="middle">a = ${st.currentA}</text>
+
+          <!-- Cateto b (altura) -->
+          <line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="#c084fc" stroke-width="3"/>
+          <text x="${ax + 12}" y="${(ay + by) / 2}" fill="#c084fc" font-size="12" font-family="monospace">b = ${st.currentB}</text>
+
+          <!-- Hipotenusa Láser c -->
+          <line x1="${ox}" y1="${oy}" x2="${bx}" y2="${by}" stroke="#22c55e" stroke-width="3.5" stroke-dasharray="6,2"/>
+          <text x="${(ox + bx) / 2 - 15}" y="${(oy + by) / 2 - 10}" fill="#4ade80" font-size="13" font-family="monospace" font-weight="bold">c = √${sumSq}</text>
+
+          ${arcSvg}
+
+          <!-- Nodo interactivo arrastrable -->
+          <circle id="laser-drag-handle" class="drag-handle-circle" cx="${bx}" cy="${by}" r="9"/>
+        `;
+
+        attachDragEvents();
+      }
+
+      function attachDragEvents() {
+        const handle = document.getElementById("laser-drag-handle");
+        if (!handle) return;
+
+        const onPointerDown = (e) => {
+          gameState.c4Data.isDragging = true;
+          gameState.c4Data.arcProjected = false;
+          handle.setPointerCapture(e.pointerId);
+          document.getElementById("laser-drag-status-indicator").textContent = "Moviendo catetos a y b...";
+        };
+
+        const onPointerMove = (e) => {
+          if (!gameState.c4Data.isDragging) return;
+          const rect = svg.getBoundingClientRect();
+          const svgX = (e.clientX - rect.left) * (650 / rect.width);
+          const svgY = (e.clientY - rect.top) * (280 / rect.height);
+
+          const ox = 70;
+          const oy = 210;
+          const scale = 95;
+
+          // Calcular valores de a y b con ajuste
+          let newA = Math.round((svgX - ox) / scale);
+          let newB = Math.round((oy - svgY) / scale);
+
+          newA = Math.max(1, Math.min(5, newA));
+          newB = Math.max(1, Math.min(4, newB));
+
+          if (newA !== gameState.c4Data.currentA || newB !== gameState.c4Data.currentB) {
+            gameState.c4Data.currentA = newA;
+            gameState.c4Data.currentB = newB;
+            renderLaserBridge();
+          }
+        };
+
+        const onPointerUp = (e) => {
+          if (gameState.c4Data.isDragging) {
+            gameState.c4Data.isDragging = false;
+            try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+            document.getElementById("laser-drag-status-indicator").textContent = "Vértice fijado. Pulsa en Proyectar Láser.";
+          }
+        };
+
+        handle.addEventListener("pointerdown", onPointerDown);
+        svg.addEventListener("pointermove", onPointerMove);
+        svg.addEventListener("pointerup", onPointerUp);
+        svg.addEventListener("pointercancel", onPointerUp);
+      }
+
+      document.getElementById("btn-c4-project-arc").addEventListener("click", () => {
+        audio.playLaser();
+        gameState.c4Data.arcProjected = true;
+        renderLaserBridge();
+      });
+
+      renderLaserBridge();
+
+      const btnSubmit = document.getElementById("btn-submit-c4");
+      const feedback = document.getElementById("feedback-c4");
+
+      btnSubmit.addEventListener("click", () => {
+        const st = gameState.c4Data;
+        const currentSumSq = st.currentA * st.currentA + st.currentB * st.currentB;
+        gameState.attempts[4] = (gameState.attempts[4] || 0) + 1;
+
+        if (currentSumSq === st.target.sumSq) {
+          audio.playUnlock();
+          awardPoints(4);
+          showFeedback(feedback, true, `¡Puente Láser Alineado! Catetos ${st.currentA} y ${st.currentB} generan √(${st.currentA}² + ${st.currentB}²) = √${st.target.sumSq}. El arco cae con precisión matemática sobre la recta.`);
+          setTimeout(() => goToChamberIntro(5), 1600);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Frecuencia errónea. Los catetos ${st.currentA} y ${st.currentB} dan √(${st.currentA}² + ${st.currentB}²) = √${currentSumSq}, pero Silvextrux exige √${st.target.sumSq}.`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 5: LABORATORIO DE DESCUBRIMIENTO DEL PRODUCTO (3 APARTADOS)
+    // =========================================================================
+    function initChamber5() {
+      const data = ChallengeGenerators.genChamber5();
+      gameState.c5Data = data;
+
+      // Apartado A
+      document.getElementById("c5-expr-title-a").innerHTML = `
+        Circuito A: ${data.partA.base}<sup>${data.partA.m}</sup> · ${data.partA.base}<sup>${data.partA.n}</sup> = ?
+      `;
+      const btnExpandA = document.getElementById("btn-c5-expand-a");
+      const expansionA = document.getElementById("c5-expansion-a");
+      btnExpandA.addEventListener("click", () => {
+        audio.playClick();
+        expansionA.style.display = "flex";
+        expansionA.innerHTML = "";
+        for (let i = 0; i < data.partA.m; i++) {
+          const p = document.createElement("span");
+          p.className = "factor-pill";
+          p.textContent = data.partA.base;
+          expansionA.appendChild(p);
+        }
+        const mul = document.createElement("span");
+        mul.style.fontWeight = "bold";
+        mul.style.color = "#facc15";
+        mul.textContent = "×";
+        expansionA.appendChild(mul);
+        for (let i = 0; i < data.partA.n; i++) {
+          const p = document.createElement("span");
+          p.className = "factor-pill";
+          p.textContent = data.partA.base;
+          expansionA.appendChild(p);
+        }
+        const note = document.createElement("div");
+        note.style.width = "100%";
+        note.style.fontSize = "0.85rem";
+        note.style.color = "#facc15";
+        note.style.marginTop = "0.35rem";
+        note.innerHTML = `💡 Hay ${data.partA.m} + ${data.partA.n} = <strong>${data.partA.correctExp} factores</strong> de ${data.partA.base}. ¡Se mantiene la base (${data.partA.base}) y se suman los exponentes!`;
+        expansionA.appendChild(note);
+      });
+
+      // Apartado B
+      document.getElementById("c5-expr-title-b").innerHTML = `
+        Circuito B: ${data.partB.base}<sup>${data.partB.p}</sup> · ${data.partB.base} · ${data.partB.base}<sup>${data.partB.q}</sup> = ?
+      `;
+      const btnExpandB = document.getElementById("btn-c5-expand-b");
+      const expansionB = document.getElementById("c5-expansion-b");
+      btnExpandB.addEventListener("click", () => {
+        audio.playClick();
+        expansionB.style.display = "flex";
+        expansionB.innerHTML = "";
+        for (let i = 0; i < data.partB.p; i++) {
+          const p = document.createElement("span");
+          p.className = "factor-pill";
+          p.textContent = data.partB.base;
+          expansionB.appendChild(p);
+        }
+        const mul1 = document.createElement("span");
+        mul1.style.fontWeight = "bold";
+        mul1.style.color = "#facc15";
+        mul1.textContent = "×";
+        expansionB.appendChild(mul1);
+        const pMid = document.createElement("span");
+        pMid.className = "factor-pill";
+        pMid.style.borderColor = "#facc15";
+        pMid.textContent = `${data.partB.base}¹`;
+        pMid.title = "Exponente 1 tácito";
+        expansionB.appendChild(pMid);
+        const mul2 = document.createElement("span");
+        mul2.style.fontWeight = "bold";
+        mul2.style.color = "#facc15";
+        mul2.textContent = "×";
+        expansionB.appendChild(mul2);
+        for (let i = 0; i < data.partB.q; i++) {
+          const p = document.createElement("span");
+          p.className = "factor-pill";
+          p.textContent = data.partB.base;
+          expansionB.appendChild(p);
+        }
+        const note = document.createElement("div");
+        note.style.width = "100%";
+        note.style.fontSize = "0.85rem";
+        note.style.color = "#facc15";
+        note.style.marginTop = "0.35rem";
+        note.innerHTML = `💡 ¡El factor central no tiene exponente escrito porque equivale a exponente 1! Total: ${data.partB.p} + 1 + ${data.partB.q} = <strong>${data.partB.correctExp} factores</strong>.`;
+        expansionB.appendChild(note);
+      });
+
+      // Apartado C
+      document.getElementById("c5-expr-title-c").innerHTML = `
+        Circuito C: ${data.partC.c}<sup>${data.partC.k}</sup> · ${data.partC.d}<sup>${data.partC.k}</sup> = ?
+      `;
+      const btnExpandC = document.getElementById("btn-c5-expand-c");
+      const expansionC = document.getElementById("c5-expansion-c");
+      btnExpandC.addEventListener("click", () => {
+        audio.playClick();
+        expansionC.style.display = "flex";
+        expansionC.innerHTML = "";
+        for (let i = 0; i < data.partC.k; i++) {
+          const p = document.createElement("span");
+          p.className = "factor-pill";
+          p.textContent = `(${data.partC.c}·${data.partC.d})`;
+          expansionC.appendChild(p);
+        }
+        const note = document.createElement("div");
+        note.style.width = "100%";
+        note.style.fontSize = "0.85rem";
+        note.style.color = "#facc15";
+        note.style.marginTop = "0.35rem";
+        note.innerHTML = `💡 Las bases son distintas pero el exponente es idéntico (${data.partC.k}): multiplicamos las bases (${data.partC.c} × ${data.partC.d} = <strong>${data.partC.correctBase}</strong>) manteniendo el exponente (${data.partC.correctExp}).`;
+        expansionC.appendChild(note);
+      });
+
+      const btnSubmit = document.getElementById("btn-submit-c5");
+      const feedback = document.getElementById("feedback-c5");
+
+      btnSubmit.addEventListener("click", () => {
+        const bA = parseInt(document.getElementById("input-c5-base-a").value.trim(), 10);
+        const eA = parseInt(document.getElementById("input-c5-exp-a").value.trim(), 10);
+        const bB = parseInt(document.getElementById("input-c5-base-b").value.trim(), 10);
+        const eB = parseInt(document.getElementById("input-c5-exp-b").value.trim(), 10);
+        const bC = parseInt(document.getElementById("input-c5-base-c").value.trim(), 10);
+        const eC = parseInt(document.getElementById("input-c5-exp-c").value.trim(), 10);
+
+        gameState.attempts[5] = (gameState.attempts[5] || 0) + 1;
+
+        const okA = (bA === data.partA.correctBase && eA === data.partA.correctExp);
+        const okB = (bB === data.partB.correctBase && eB === data.partB.correctExp);
+        const okC = (bC === data.partC.correctBase && eC === data.partC.correctExp);
+
+        if (okA && okB && okC) {
+          audio.playUnlock();
+          awardPoints(5);
+          showFeedback(feedback, true, `¡Compuerta 5 Abierta! Habéis dominado las tres variantes del producto de potencias: sumando exponentes en igual base, recordando el exponente 1 tácito y multiplicando bases con el mismo exponente.`);
+          setTimeout(() => goToChamberIntro(6), 1600);
+        } else {
+          audio.playError();
+          let errText = "Revisad vuestras respuestas:";
+          if (!okA) errText += ` En el Apartado A la base es ${data.partA.correctBase} y se suman los exponentes (${data.partA.m}+${data.partA.n}=${data.partA.correctExp}).`;
+          if (!okB) errText += ` En el Apartado B recordad que el factor sin exponente cuenta como 1 (${data.partB.p}+1+${data.partB.q}=${data.partB.correctExp}).`;
+          if (!okC) errText += ` En el Apartado C multiplicad las bases (${data.partC.c}×${data.partC.d}=${data.partC.correctBase}) con exponente ${data.partC.correctExp}.`;
+          showFeedback(feedback, false, errText);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 6: LABORATORIO DE DESCUBRIMIENTO DEL COCIENTE (3 APARTADOS)
+    // =========================================================================
+    function initChamber6() {
+      const data = ChallengeGenerators.genChamber6();
+      gameState.c6Data = data;
+
+      // Apartado A
+      document.getElementById("c6-expr-title-a").innerHTML = `
+        Conducto A: ${data.partA.base}<sup>${data.partA.m}</sup> : ${data.partA.base}<sup>${data.partA.n}</sup> = ?
+      `;
+      const btnCancelA = document.getElementById("btn-c6-cancel-a");
+      const cancelA = document.getElementById("c6-cancellation-a");
+      btnCancelA.addEventListener("click", () => {
+        audio.playClick();
+        cancelA.style.display = "block";
+        let numPills = "", denPills = "";
+        for (let i = 0; i < data.partA.m; i++) {
+          numPills += `<span class="factor-pill ${i < data.partA.n ? 'canceled' : ''}">${data.partA.base}</span> `;
+        }
+        for (let i = 0; i < data.partA.n; i++) {
+          denPills += `<span class="factor-pill canceled">${data.partA.base}</span> `;
+        }
+        cancelA.innerHTML = `
+          <div style="font-size: 0.85rem; color: #d4cfba;">${data.partA.n} factores se anulan:</div>
+          <div style="font-size: 1rem; font-family: monospace; line-height: 1.8; margin: 0.35rem 0;">
+            <div>${numPills}</div>
+            <div style="border-top: 2px solid #ca8a04; width: 50%; margin: 3px auto;"></div>
+            <div>${denPills}</div>
+          </div>
+          <div style="color: #facc15; font-size: 0.85rem;">💡 Sobreviven ${data.partA.m} - ${data.partA.n} = <strong>${data.partA.correctExp} factores</strong> en el numerador. ¡Los exponentes se restan!</div>
+        `;
+      });
+
+      // Apartado B
+      document.getElementById("c6-expr-title-b").innerHTML = `
+        Conducto B: (-${data.partB.base})<sup>${data.partB.p}</sup> : (-${data.partB.base})<sup>${data.partB.q}</sup> = ?
+      `;
+      const btnCancelB = document.getElementById("btn-c6-cancel-b");
+      const cancelB = document.getElementById("c6-cancellation-b");
+      btnCancelB.addEventListener("click", () => {
+        audio.playClick();
+        cancelB.style.display = "block";
+        cancelB.innerHTML = `
+          <div style="font-size: 0.85rem; color: #d4cfba;">La base es un número entero negativo protegido por paréntesis: (-${data.partB.base}).</div>
+          <div style="color: #facc15; font-size: 0.85rem; margin-top: 0.35rem;">
+            💡 La base resultante sigue siendo <strong>-${data.partB.base}</strong> y los exponentes se restan: ${data.partB.p} - ${data.partB.q} = <strong>${data.partB.correctExp}</strong>.
+          </div>
+        `;
+      });
+
+      // Apartado C
+      document.getElementById("c6-expr-title-c").innerHTML = `
+        Conducto C: ${data.partC.a}<sup>${data.partC.k}</sup> : ${data.partC.b}<sup>${data.partC.k}</sup> = ?
+      `;
+      const btnCancelC = document.getElementById("btn-c6-cancel-c");
+      const cancelC = document.getElementById("c6-cancellation-c");
+      btnCancelC.addEventListener("click", () => {
+        audio.playClick();
+        cancelC.style.display = "block";
+        cancelC.innerHTML = `
+          <div style="font-size: 0.85rem; color: #d4cfba;">Mismo exponente (${data.partC.k}) con bases distintas: agrupamos el cociente:</div>
+          <div style="color: #facc15; font-size: 0.85rem; margin-top: 0.35rem;">
+            💡 (${data.partC.a} : ${data.partC.b})<sup>${data.partC.k}</sup> = <strong>${data.partC.correctBase}<sup>${data.partC.correctExp}</sup></strong>.
+          </div>
+        `;
+      });
+
+      const btnSubmit = document.getElementById("btn-submit-c6");
+      const feedback = document.getElementById("feedback-c6");
+
+      btnSubmit.addEventListener("click", () => {
+        const bA = parseInt(document.getElementById("input-c6-base-a").value.trim(), 10);
+        const eA = parseInt(document.getElementById("input-c6-exp-a").value.trim(), 10);
+        const bB = parseInt(document.getElementById("input-c6-base-b").value.trim(), 10);
+        const eB = parseInt(document.getElementById("input-c6-exp-b").value.trim(), 10);
+        const bC = parseInt(document.getElementById("input-c6-base-c").value.trim(), 10);
+        const eC = parseInt(document.getElementById("input-c6-exp-c").value.trim(), 10);
+
+        gameState.attempts[6] = (gameState.attempts[6] || 0) + 1;
+
+        const okA = (bA === data.partA.correctBase && eA === data.partA.correctExp);
+        const okB = (bB === data.partB.correctBase && eB === data.partB.correctExp);
+        const okC = (bC === data.partC.correctBase && eC === data.partC.correctExp);
+
+        if (okA && okB && okC) {
+          audio.playUnlock();
+          awardPoints(6);
+          showFeedback(feedback, true, `¡Compuerta 6 Purificada! Habéis dominado las tres leyes del cociente: resta de exponentes, conservación de bases enteras negativas (-b) y división de bases con exponente común.`);
+          setTimeout(() => goToChamberIntro(7), 1600);
+        } else {
+          audio.playError();
+          let errText = "Revisad vuestras respuestas:";
+          if (!okA) errText += ` En el Apartado A los exponentes se restan (${data.partA.m}-${data.partA.n}=${data.partA.correctExp}).`;
+          if (!okB) errText += ` En el Apartado B la base es negativa (-${data.partB.base}) y el exponente es ${data.partB.correctExp}.`;
+          if (!okC) errText += ` En el Apartado C dividid las bases (${data.partC.a}÷${data.partC.b}=${data.partC.correctBase}) manteniendo el exponente ${data.partC.correctExp}.`;
+          showFeedback(feedback, false, errText);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 7: LABORATORIO DE POTENCIA DE UNA POTENCIA (3 APARTADOS)
+    // =========================================================================
+    function initChamber7() {
+      const data = ChallengeGenerators.genChamber7();
+      gameState.c7Data = data;
+
+      // Apartado A
+      document.getElementById("c7-expr-title-a").innerHTML = `
+        Frecuencia A: (${data.partA.base}<sup>${data.partA.m}</sup>)<sup>${data.partA.n}</sup> = ?
+      `;
+      const btnExpandA = document.getElementById("btn-c7-expand-a");
+      const packetsA = document.getElementById("c7-packets-a");
+      btnExpandA.addEventListener("click", () => {
+        audio.playClick();
+        packetsA.style.display = "flex";
+        packetsA.innerHTML = "";
+        for (let p = 1; p <= data.partA.n; p++) {
+          const row = document.createElement("div");
+          row.style.background = "#2a2212";
+          row.style.padding = "0.35rem 0.6rem";
+          row.style.borderRadius = "4px";
+          row.style.fontSize = "0.8rem";
+          row.style.fontFamily = "monospace";
+          let pills = "";
+          for (let f = 0; f < data.partA.m; f++) pills += `<span class="factor-pill">${data.partA.base}</span> `;
+          row.innerHTML = `<span style="color: #facc15;">Paquete ${p}:</span> ${pills}`;
+          packetsA.appendChild(row);
+        }
+        const note = document.createElement("div");
+        note.style.color = "#facc15";
+        note.style.fontSize = "0.85rem";
+        note.style.marginTop = "0.25rem";
+        note.innerHTML = `💡 Tenemos ${data.partA.n} paquetes de ${data.partA.m} factores: ${data.partA.m} × ${data.partA.n} = <strong>${data.partA.correctExp} factores</strong>. ¡Los exponentes se multiplican!`;
+        packetsA.appendChild(note);
+      });
+
+      // Apartado B
+      document.getElementById("c7-expr-title-b").innerHTML = `
+        Frecuencia B: [(${data.partB.base}<sup>${data.partB.p}</sup>)<sup>${data.partB.q}</sup>]<sup>${data.partB.r}</sup> = ?
+      `;
+      const btnExpandB = document.getElementById("btn-c7-expand-b");
+      const packetsB = document.getElementById("c7-packets-b");
+      btnExpandB.addEventListener("click", () => {
+        audio.playClick();
+        packetsB.style.display = "flex";
+        packetsB.innerHTML = `
+          <div style="font-size: 0.85rem; color: #d4cfba;">Cascada de potencias anidadas:</div>
+          <div style="color: #facc15; font-size: 0.85rem; margin-top: 0.25rem;">
+            💡 Se multiplican consecutivamente todos los exponentes: ${data.partB.p} × ${data.partB.q} × ${data.partB.r} = <strong>${data.partB.correctExp}</strong>.<br>
+            Resultado: <strong>${data.partB.correctBase}<sup>${data.partB.correctExp}</sup></strong>.
+          </div>
+        `;
+      });
+
+      // Apartado C
+      document.getElementById("c7-expr-title-c").innerHTML = `
+        Frecuencia C: (${data.partC.base}<sup>${data.partC.m}</sup> · ${data.partC.base}<sup>${data.partC.n}</sup>)<sup>${data.partC.p}</sup> = ?
+      `;
+      const btnExpandC = document.getElementById("btn-c7-expand-c");
+      const packetsC = document.getElementById("c7-packets-c");
+      btnExpandC.addEventListener("click", () => {
+        audio.playClick();
+        packetsC.style.display = "flex";
+        packetsC.innerHTML = `
+          <div style="font-size: 0.85rem; color: #d4cfba;">Paso 1: Resolver el paréntesis interior sumando exponentes de igual base:</div>
+          <div style="font-size: 0.85rem; color: #fff; margin: 0.25rem 0;">
+            ${data.partC.base}<sup>${data.partC.m}</sup> · ${data.partC.base}<sup>${data.partC.n}</sup> = ${data.partC.base}<sup>${data.partC.m + data.partC.n}</sup>
+          </div>
+          <div style="color: #facc15; font-size: 0.85rem;">
+            💡 Paso 2: Elevar a la potencia exterior multiplicando: (${data.partC.m + data.partC.n}) × ${data.partC.p} = <strong>${data.partC.correctExp}</strong>.<br>
+            Resultado: <strong>${data.partC.correctBase}<sup>${data.partC.correctExp}</sup></strong>.
+          </div>
+        `;
+      });
+
+      const btnSubmit = document.getElementById("btn-submit-c7");
+      const feedback = document.getElementById("feedback-c7");
+
+      btnSubmit.addEventListener("click", () => {
+        const bA = parseInt(document.getElementById("input-c7-base-a").value.trim(), 10);
+        const eA = parseInt(document.getElementById("input-c7-exp-a").value.trim(), 10);
+        const bB = parseInt(document.getElementById("input-c7-base-b").value.trim(), 10);
+        const eB = parseInt(document.getElementById("input-c7-exp-b").value.trim(), 10);
+        const bC = parseInt(document.getElementById("input-c7-base-c").value.trim(), 10);
+        const eC = parseInt(document.getElementById("input-c7-exp-c").value.trim(), 10);
+
+        gameState.attempts[7] = (gameState.attempts[7] || 0) + 1;
+
+        const okA = (bA === data.partA.correctBase && eA === data.partA.correctExp);
+        const okB = (bB === data.partB.correctBase && eB === data.partB.correctExp);
+        const okC = (bC === data.partC.correctBase && eC === data.partC.correctExp);
+
+        if (okA && okB && okC) {
+          audio.playUnlock();
+          awardPoints(7);
+          showFeedback(feedback, true, `¡Compuerta 7 Armonizada! Habéis demostrado el cálculo de potencias de potencias, cascadas triples de exponentes y operaciones agrupadas con paréntesis.`);
+          setTimeout(() => goToChamberIntro(8), 1600);
+        } else {
+          audio.playError();
+          let errText = "Revisad vuestras respuestas:";
+          if (!okA) errText += ` En el Apartado A los exponentes se multiplican (${data.partA.m}×${data.partA.n}=${data.partA.correctExp}).`;
+          if (!okB) errText += ` En el Apartado B multiplicad los 3 exponentes en cascada (${data.partB.p}×${data.partB.q}×${data.partB.r}=${data.partB.correctExp}).`;
+          if (!okC) errText += ` En el Apartado C sumad dentro (${data.partC.m}+${data.partC.n}) y multiplicad por ${data.partC.p} (= ${data.partC.correctExp}).`;
+          showFeedback(feedback, false, errText);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 8: AUDITORÍA DE SILVEXTRUX
+    // =========================================================================
+    function initChamber8() {
+      const data = ChallengeGenerators.genChamber8();
+      gameState.c8Data = data;
+
+      const container = document.getElementById("c8-statements-container");
+      container.innerHTML = "";
+
+      data.statements.forEach((stmt, idx) => {
+        const row = document.createElement("div");
+        row.style.background = "#201a0d";
+        row.style.border = "1px solid var(--br-border-aged)";
+        row.style.borderRadius = "6px";
+        row.style.padding = "0.75rem 1rem";
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.gap = "1rem";
+        row.style.flexWrap = "wrap";
+
+        row.innerHTML = `
+          <div style="font-size: 0.88rem; color: #fef08a; flex: 1;">
+            <strong>${idx + 1}.</strong> ${stmt.text}
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <label style="font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer; color: var(--terminal-green); display: flex; align-items: center; gap: 0.25rem;">
+              <input type="radio" name="c8_radio_${stmt.id}" value="true" /> VERDADERO
+            </label>
+            <label style="font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer; color: var(--alarm-red); display: flex; align-items: center; gap: 0.25rem;">
+              <input type="radio" name="c8_radio_${stmt.id}" value="false" /> FALSO
+            </label>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      const btnSubmit = document.getElementById("btn-submit-c8");
+      const feedback = document.getElementById("feedback-c8");
+
+      btnSubmit.addEventListener("click", () => {
+        let allAnswered = true;
+        let allCorrect = true;
+        let errorMsg = "";
+
+        data.statements.forEach(stmt => {
+          const selected = document.querySelector(`input[name="c8_radio_${stmt.id}"]:checked`);
+          if (!selected) allAnswered = false;
+          else {
+            const isUserTrue = selected.value === "true";
+            if (isUserTrue !== stmt.isTrue) {
+              allCorrect = false;
+              errorMsg = stmt.explanation;
+            }
+          }
+        });
+
+        if (!allAnswered) {
+          showFeedback(feedback, false, "Por favor, seleccionad Verdadero o Falso para cada una de las 4 afirmaciones de la pizarra.");
+          return;
+        }
+
+        gameState.attempts[8] = (gameState.attempts[8] || 0) + 1;
+
+        if (allCorrect) {
+          audio.playUnlock();
+          awardPoints(8);
+          showFeedback(feedback, true, "¡Auditoría superada sin fallos! Habéis demostrado por qué a⁰ = 1 y desmontado las falsas identidades algebraicas.");
+          setTimeout(() => goToChamberIntro(9), 1600);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Error en la auditoría: ${errorMsg}`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // CÁMARA 9: EL CÓDIGO MAESTRO
+    // =========================================================================
+    function initChamber9() {
+      const data = ChallengeGenerators.genChamber9();
+      gameState.c9Data = data;
+
+      const exprDisplay = document.getElementById("c9-expression-display");
+      exprDisplay.innerHTML = `
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+          <div style="display: inline-flex; flex-direction: column; vertical-align: middle;">
+            <span style="border-bottom: 2px solid #ca8a04; padding-bottom: 2px;">(2<sup>${data.m}</sup>)<sup>${data.n}</sup> · 2<sup>${data.p}</sup></span>
+            <span style="padding-top: 2px;">2<sup>${data.q}</sup></span>
+          </div>
+          <span>+</span>
+          <span>√${data.rootR}</span>
+          <span>-</span>
+          <span>7<sup>0</sup></span>
+          <span>=</span>
+          <span style="color: #facc15;">[ CÓDIGO FINAL ]</span>
+        </div>
+      `;
+
+      const btnSubmit = document.getElementById("btn-submit-c9");
+      const feedback = document.getElementById("feedback-c9");
+
+      btnSubmit.addEventListener("click", () => {
+        const p1 = parseInt(document.getElementById("input-c9-p1").value.trim(), 10);
+        const p2 = parseInt(document.getElementById("input-c9-p2").value.trim(), 10);
+        const pFinal = parseInt(document.getElementById("input-c9-final").value.trim(), 10);
+        gameState.attempts[9] = (gameState.attempts[9] || 0) + 1;
+
+        if (p1 === data.powerPart && p2 === data.rootVal && pFinal === data.finalCode) {
+          audio.playUnlock();
+          awardPoints(9);
+          gameState.endTime = new Date();
+          showFeedback(feedback, true, `¡BLOQUEO GENERAL DESACTIVADO! Habéis demostrado el dominio total de las operaciones combinadas. ¡Las puertas de los Backrooms se abren!`);
+          setTimeout(() => showDiplomaScreen(), 1800);
+        } else {
+          audio.playError();
+          showFeedback(feedback, false, `Código incorrecto. Comprobad en un papel: (2^${data.m})^${data.n} = 2^${data.m * data.n}. Multiplicado por 2^${data.p} da 2^${data.m * data.n + data.p}. Dividido entre 2^${data.q} da 2^${(data.m * data.n + data.p) - data.q} = ${data.powerPart}. Sumadle √${data.rootR} = ${data.rootVal} y restadle 7⁰ = 1.`);
+        }
+      });
+    }
+
+    // =========================================================================
+    // 7. SISTEMA DE PUNTUACIÓN Y EVALUACIÓN
+    // =========================================================================
+    function awardPoints(chamberNum) {
+      const attempts = gameState.attempts[chamberNum] || 1;
+      let points = CONFIG.POINTS_PER_CHAMBER;
+      if (attempts > 1) {
+        points = Math.max(0.65, points - (attempts - 1) * 0.15);
+      }
+      gameState.score = Math.min(CONFIG.MAX_POINTS, gameState.score + points);
+
+      const formatted = gameState.score.toFixed(1);
+      document.getElementById("display-score-top").textContent = `Puntos: ${formatted} / 10`;
+      const liveLabel = document.getElementById(`c${chamberNum}-live-score`);
+      if (liveLabel) liveLabel.textContent = formatted;
+    }
+
+    function showFeedback(boxElement, isSuccess, message) {
+      boxElement.className = `feedback-box visible ${isSuccess ? 'feedback-success' : 'feedback-error'}`;
+      boxElement.innerHTML = `
+        <span style="font-size: 1.25rem;">${isSuccess ? '✅' : '⚠️'}</span>
+        <div>${message}</div>
+      `;
+    }
+
+    // =========================================================================
+    // 8. DIPLOMA Y DESCARGA DIRECTA (PNG GARANTIZADO)
+    // =========================================================================
+    function showDiplomaScreen() {
+      hideAllScreens();
+      document.getElementById("screen-diploma").style.display = "flex";
+      updateProgressTracker(10);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const finalScore = Math.min(10, Math.round(gameState.score * 10) / 10);
+      document.getElementById("dip-student1").textContent = gameState.student1 || "Estudiante 1";
+      document.getElementById("dip-student2").textContent = gameState.student2 || "Estudiante 2";
+      document.getElementById("dip-group").textContent = gameState.group || "2º ESO";
+      document.getElementById("dip-team").textContent = gameState.team || "Escuadrón";
+      document.getElementById("dip-score").textContent = `${finalScore.toFixed(1)} / 10`;
+
+      let tier = "INICIAL (Requiere práctica)";
+      if (finalScore >= 9.0) tier = "SOBRESALIENTE (Maestría Matemática)";
+      else if (finalScore >= 7.0) tier = "NOTABLE (Gran Dominio de Potencias)";
+      else if (finalScore >= 5.0) tier = "APROBADO (En Consolidación)";
+      document.getElementById("dip-tier").textContent = tier;
+
+      const totalSecs = gameState.startTime ? Math.floor((new Date() - gameState.startTime) / 1000) : 0;
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+      document.getElementById("dip-time").textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      const now = new Date();
+      document.getElementById("dip-date").textContent = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+      document.getElementById("dip-uuid").textContent = `BK-${now.getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      saveCurrentSession(true);
+    }
+
+    function initDiplomaScreen() {
+      document.getElementById("btn-download-diploma-image").addEventListener("click", generateAndDownloadDiplomaPNG);
+
+      document.getElementById("btn-restart-game").addEventListener("click", () => {
+        if (confirm("¿Deseáis comenzar una nueva misión con nuevos números aleatorios?")) {
+          location.reload();
+        }
+      });
+    }
+
+    // Renderizado en Canvas 1200x850 de alta resolución y descarga instantánea
+    function generateAndDownloadDiplomaPNG() {
+      const canvas = document.getElementById("diploma-render-canvas");
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // 1. Fondo envejecido Backrooms
+      ctx.fillStyle = "#16130a";
+      ctx.fillRect(0, 0, w, h);
+
+      // Marco dorado doble
+      ctx.strokeStyle = "#ca8a04";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(20, 20, w - 40, h - 40);
+
+      ctx.strokeStyle = "#eab308";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(32, 32, w - 64, h - 64);
+
+      // Fondo de filigrana
+      ctx.fillStyle = "rgba(234, 179, 8, 0.03)";
+      ctx.fillRect(35, 35, w - 70, h - 70);
+
+      // Encabezado
+      ctx.fillStyle = "#fef08a";
+      ctx.font = "bold 32px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("DIPLOMA DE SUPERVIVENCIA DEL LABORATORIO", w / 2, 90);
+
+      ctx.fillStyle = "#facc15";
+      ctx.font = "bold 18px monospace";
+      ctx.fillText("COMITÉ DE INVESTIGACIÓN MATEMÁTICA Y CIENCIAS LIMINALES · LOMLOE 2º ESO", w / 2, 125);
+
+      // Cuerpo del texto
+      ctx.fillStyle = "#f5f5dc";
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      const s1 = gameState.student1 || "Estudiante 1";
+      const s2 = gameState.student2 || "Estudiante 2";
+      const grp = gameState.group || "2º ESO";
+      const team = gameState.team || "Escuadrón";
+
+      ctx.fillText(`Se certifica que la pareja investigadora formada por`, w / 2, 185);
+
+      ctx.fillStyle = "#fbbf24";
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillText(`${s1}  y  ${s2}`, w / 2, 225);
+
+      ctx.fillStyle = "#f5f5dc";
+      ctx.font = "18px sans-serif";
+      ctx.fillText(`Grupo: ${grp}  |  Equipo: ${team}`, w / 2, 260);
+
+      ctx.font = "16px sans-serif";
+      ctx.fillText("Ha superado las 9 cámaras selladas de los Backrooms, demostrando dominio de", w / 2, 295);
+      ctx.fillText("potencias, crecimiento exponencial, el teorema de Pitágoras, irracionales y operaciones combinadas.", w / 2, 320);
+
+      // Caja de Calificación
+      ctx.fillStyle = "#241d10";
+      ctx.fillRect(150, 355, w - 300, 110);
+      ctx.strokeStyle = "#4ade80";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(150, 355, w - 300, 110);
+
+      const finalScore = Math.min(10, Math.round(gameState.score * 10) / 10);
+      let tier = "SOBRESALIENTE";
+      if (finalScore < 5) tier = "INICIAL";
+      else if (finalScore < 7) tier = "APROBADO";
+      else if (finalScore < 9) tier = "NOTABLE";
+
+      ctx.fillStyle = "#4ade80";
+      ctx.font = "bold 44px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(`${finalScore.toFixed(1)} / 10`, w / 2 - 200, 425);
+
+      ctx.fillStyle = "#fbbf24";
+      ctx.font = "bold 22px sans-serif";
+      ctx.fillText(tier, w / 2 + 100, 415);
+
+      const totalSecs = gameState.startTime ? Math.floor((new Date() - gameState.startTime) / 1000) : 0;
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+      ctx.fillStyle = "#d4cfba";
+      ctx.font = "15px monospace";
+      ctx.fillText(`Tiempo de escape: ${mins}m ${secs}s`, w / 2 + 100, 442);
+
+      // Respuestas de metacognición
+      ctx.fillStyle = "rgba(40, 32, 17, 0.9)";
+      ctx.fillRect(80, 485, w - 160, 230);
+      ctx.strokeStyle = "#786027";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(80, 485, w - 160, 230);
+
+      ctx.fillStyle = "#facc15";
+      ctx.font = "bold 15px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("🧠 REGISTRO DE METACOGNICIÓN Y COOPERACIÓN EN EL AULA:", 100, 515);
+
+      const q1 = document.getElementById("meta-q1").value.trim() || "Comprensión del crecimiento exponencial en la vida real.";
+      const q2 = document.getElementById("meta-q2").value.trim() || "Trabajo colaborativo contrastando cálculos en papel.";
+      const q3 = document.getElementById("meta-q3").value.trim() || "Experiencia gamificada y significativa con las matemáticas.";
+
+      ctx.fillStyle = "#f5f5dc";
+      ctx.font = "13px sans-serif";
+      ctx.fillText("1. Sorpresa matemática: " + q1.slice(0, 110), 100, 548);
+      ctx.fillText("2. Cooperación en pareja: " + q2.slice(0, 110), 100, 588);
+      ctx.fillText("3. Valoración de la misión: " + q3.slice(0, 110), 100, 628);
+
+      // Firmas y sello
+      ctx.fillStyle = "#ca8a04";
+      ctx.font = "14px monospace";
+      const now = new Date();
+      const dateStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+      ctx.fillText(`Fecha: ${dateStr}  |  Código de Registro: BK-${now.getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`, 100, 685);
+
+      ctx.textAlign = "right";
+      ctx.fillText("Prof. Silvextrux & Álex (Firmado)", w - 100, 685);
+
+      // Descargar como PNG
+      const imageURL = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = imageURL;
+      const cleanTeam = (team || "Equipo").replace(/[^a-zA-Z0-9]/g, "_");
+      a.download = `Diploma_Backrooms_${cleanTeam}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // =========================================================================
+    // 9. PANEL DOCENTE Y ALMACENAMIENTO LOCAL
+    // =========================================================================
+    function getStoredRecords() {
+      try {
+        const d = localStorage.getItem(CONFIG.STORAGE_KEY);
+        return d ? JSON.parse(d) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCurrentSession(isCompleted) {
+      if (!gameState.team) return;
+      const records = getStoredRecords();
+      const totalSecs = gameState.startTime ? Math.floor((new Date() - gameState.startTime) / 1000) : 0;
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+
+      const obj = {
+        id: gameState.team + "_" + (gameState.startTime ? gameState.startTime.getTime() : Date.now()),
+        date: new Date().toLocaleString('es-ES'),
+        team: gameState.team,
+        student1: gameState.student1,
+        student2: gameState.student2,
+        group: gameState.group,
+        score: Math.min(10, Math.round(gameState.score * 10) / 10),
+        chamber: gameState.currentChamber,
+        isCompleted: isCompleted,
+        elapsedTime: `${mins}m ${secs}s`,
+        metacognition: {
+          q1: document.getElementById("meta-q1") ? document.getElementById("meta-q1").value.trim() : "",
+          q2: document.getElementById("meta-q2") ? document.getElementById("meta-q2").value.trim() : "",
+          q3: document.getElementById("meta-q3") ? document.getElementById("meta-q3").value.trim() : ""
+        }
+      };
+
+      const existingIdx = records.findIndex(r => r.id === obj.id);
+      if (existingIdx >= 0) records[existingIdx] = obj;
+      else records.push(obj);
+
+      try {
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {}
+    }
+
+    function renderTeacherDashboard() {
+      const records = getStoredRecords();
+      const tbody = document.getElementById("teacher-records-tbody");
+      document.getElementById("stat-total-teams").textContent = records.length;
+      const comp = records.filter(r => r.isCompleted).length;
+      document.getElementById("stat-completed-teams").textContent = comp;
+
+      if (records.length > 0) {
+        const sum = records.reduce((acc, curr) => acc + (curr.score || 0), 0);
+        document.getElementById("stat-avg-score").textContent = `${(sum / records.length).toFixed(1)} / 10`;
+      } else {
+        document.getElementById("stat-avg-score").textContent = "0.0 / 10";
+      }
+
+      tbody.innerHTML = "";
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding: 1rem; text-align: center; color: #888;">No hay registros en este navegador aún.</td></tr>`;
+        return;
+      }
+
+      records.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.style.borderBottom = "1px solid var(--br-border-aged)";
+        tr.innerHTML = `
+          <td style="padding: 0.5rem; color: #888;">${r.date}</td>
+          <td style="padding: 0.5rem; color: #facc15; font-weight: 700;">${r.team}</td>
+          <td style="padding: 0.5rem;">${r.student1} & ${r.student2}</td>
+          <td style="padding: 0.5rem;">${r.group}</td>
+          <td style="padding: 0.5rem; color: #4ade80; font-weight: 700;">${r.score.toFixed(1)}</td>
+          <td style="padding: 0.5rem;">${r.isCompleted ? '🏆 Finalizado' : `Fase ${r.chamber}`}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportRecordsToCSV() {
+      const records = getStoredRecords();
+      if (records.length === 0) {
+        console.warn("No hay registros para exportar.");
+        return;
+      }
+
+      let csv = "\uFEFF";
+      csv += "Fecha;Equipo;Estudiante 1;Estudiante 2;Grupo;Puntuacion;Estado;Tiempo;Reflexion 1;Reflexion 2;Valoracion\n";
+      records.forEach(r => {
+        const q1 = (r.metacognition && r.metacognition.q1 ? r.metacognition.q1.replace(/;/g, ',') : "").replace(/\n/g, ' ');
+        const q2 = (r.metacognition && r.metacognition.q2 ? r.metacognition.q2.replace(/;/g, ',') : "").replace(/\n/g, ' ');
+        const q3 = (r.metacognition && r.metacognition.q3 ? r.metacognition.q3.replace(/;/g, ',') : "").replace(/\n/g, ' ');
+        csv += `"${r.date}";"${r.team}";"${r.student1}";"${r.student2}";"${r.group}";"${r.score.toFixed(1)}";"${r.isCompleted ? 'Completado' : 'Fase ' + r.chamber}";"${r.elapsedTime}";"${q1}";"${q2}";"${q3}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Resultados_Backrooms_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportRecordsToJSON() {
+      const records = getStoredRecords();
+      const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Resultados_Backrooms_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearTeacherRecords() {
+      localStorage.removeItem(CONFIG.STORAGE_KEY);
+      renderTeacherDashboard();
+    }
+
+    async function downloadStandaloneFile(e) {
+      const btn = e && e.target ? e.target.closest("button") : null;
+      const originalHTML = btn ? btn.innerHTML : "";
+      if (btn) {
+        btn.innerHTML = "⏳ Generando HTML offline...";
+        btn.disabled = true;
+      }
+
+      try {
+        let htmlSource = "";
+        try {
+          const res = await fetch(window.location.origin + window.location.pathname);
+          if (res.ok) {
+            htmlSource = await res.text();
+          }
+        } catch (_) {}
+
+        if (!htmlSource || !htmlSource.includes("screen-lobby")) {
+          const clone = document.documentElement.cloneNode(true);
+          const allScreens = clone.querySelectorAll(".chamber-card");
+          allScreens.forEach(s => { s.style.display = "none"; });
+          const lobby = clone.querySelector("#screen-lobby");
+          if (lobby) lobby.style.display = "block";
+          const modal = clone.querySelector("#teacher-modal");
+          if (modal) modal.style.display = "none";
+          htmlSource = "<!DOCTYPE html>\n" + clone.outerHTML;
+        }
+
+        // Convertir y optimizar avatares locales a Data URLs Base64 (180x180) para autonomía offline y peso ligero
+        const toBase64 = async (url) => {
+          try {
+            const img = new Image();
+            await new Promise((res, rej) => {
+              img.onload = res;
+              img.onerror = rej;
+              img.src = url;
+            });
+            const canvas = document.createElement("canvas");
+            canvas.width = 180;
+            canvas.height = 180;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, 180, 180);
+            return canvas.toDataURL("image/jpeg", 0.85);
+          } catch (_) {
+            return null;
+          }
+        };
+
+        const alexPath = "/src/assets/images/alex_avatar_1794136128473.jpg";
+        const silvPath = "/src/assets/images/silvextrux_avatar_1794136128349.jpg";
+
+        const [alexB64, silvB64] = await Promise.all([
+          toBase64(alexPath),
+          toBase64(silvPath)
+        ]);
+
+        if (alexB64) {
+          htmlSource = htmlSource.split(alexPath).join(alexB64);
+        }
+        if (silvB64) {
+          htmlSource = htmlSource.split(silvPath).join(silvB64);
+        }
+
+        const blob = new Blob([htmlSource], { type: "text/html;charset=utf-8" });
+        const downloadUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "los_backrooms_de_las_matematicas_2eso.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 3000);
+
+        if (btn) {
+          btn.innerHTML = "✅ ¡HTML Descargado!";
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+          }, 3000);
+        }
+      } catch (err) {
+        console.error("Error al generar archivo HTML offline:", err);
+        if (btn) {
+          btn.innerHTML = originalHTML;
+          btn.disabled = false;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
